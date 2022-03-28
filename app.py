@@ -12,7 +12,7 @@ from flask_oauthlib.client import OAuth, OAuthException
 load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__, static_folder="./build/static")
-# This tells our Flask app to look at the results of `npm build` instead of the
+
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
