@@ -1,5 +1,6 @@
 import React from 'react'
 import Iframe from 'react-iframe'
+import ReactPlayer from "react-player";
 
 export const VideoInfo = ({video}) => {
     const {Id, User_Id, Ext_Movie_Source, Title } = video || {};
@@ -11,6 +12,10 @@ export const VideoInfo = ({video}) => {
                 {User_Id}
                 {Ext_Movie_Source}
                 {Title}
+            </div>
+
+            <div>
+                <ReactPlayer url={Ext_Movie_Source} />
             </div>
 
             <div>
