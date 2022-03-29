@@ -13,6 +13,12 @@ load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__, static_folder="./build/static")
 
+bp = flask.Blueprint(
+    "bp",
+    __name__,
+    template_folder="./static/react",
+)
+
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
@@ -28,7 +34,24 @@ oauth = OAuth(app)
 
 db = SQLAlchemy(app)
 
+# set up a separate route to serve the react index.html file generated
+# you can change the route name to be more specific.
+@bp.route("/mainpage")
+def index():
+    return flask.render_template("index.html")
+
+#routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
 
     return ("Login")
+
+@app.route("/sign-up", methods=["GET", "POST"])
+def signup():
+
+    return ("Sign Up")
+
+@app.route("/landing")
+def landing():
+    
+    return ("Landing Page")
