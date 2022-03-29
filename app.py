@@ -27,3 +27,8 @@ app.secret_key = os.environ.get("SECRET_KEY")
 oauth = OAuth(app)
 
 db = SQLAlchemy(app)
+
+@app.route("/", methods=["POST", "GET"])
+def login():
+
+    return ("Login")
