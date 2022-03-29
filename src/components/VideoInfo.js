@@ -1,17 +1,18 @@
-import React from 'react'
-import Iframe from 'react-iframe'
+import React from 'react';
+import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
 
+// THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const VideoInfo = ({video}) => {
-    const {Id, User_Id, Ext_Movie_Source, Title } = video || {};
+    const {id, user_id, ext_source, title } = video || {};
 
     return video ? (
         <>
             <div>
-                {Id}
-                {User_Id}
-                {Ext_Movie_Source}
-                {Title}
+                {id}
+                {user_id}
+                {ext_source}
+                {title}
             </div>
 
             <div>

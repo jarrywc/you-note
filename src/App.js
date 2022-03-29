@@ -1,7 +1,8 @@
 import './App.css';
 import axios from 'axios';
-import {VideoListSource} from "./components/ListSource";
+import {ListSource} from "./components/ListSource";
 import {VideoInfo} from "./components/VideoInfo";
+import {VideoInfoForm} from "./components/VideoForm";
 
 const getServerData = url => async () => {
   const response = await axios.get(url);
@@ -15,9 +16,10 @@ function App() {
   return (
     <div className="App">
       {/*We assume the app route will be '/video_list'*/}
-      <VideoListSource getVideoList={getServerData('/video_list/'+{user_id})} resourceName='video' >
+      <ListSource getVideoList={getServerData('/video_list/'+{user_id})} resourceName='video' >
         <VideoInfo />
-      </VideoListSource>
+      </ListSource>
+        <VideoInfoForm />
 
     </div>
   );

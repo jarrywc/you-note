@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
+// THIS IS A TEMPLATE FOR ITERATING THROUGH A LIST
 export const ListSource = ({getList = ()=>{}, resourceName, children }) => {
     const [list, setList] = useState(null);
 
