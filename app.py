@@ -28,7 +28,7 @@ oauth = OAuth(app)
 
 db = SQLAlchemy(app)
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
 
     return ("Login")
