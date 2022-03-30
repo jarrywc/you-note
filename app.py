@@ -11,12 +11,12 @@ from flask_oauthlib.client import OAuth, OAuthException
 
 load_dotenv(find_dotenv())
 
-app = flask.Flask(__name__, static_folder="./build/static")
+app = flask.Flask(__name__, static_url_path='/static')
 
 bp = flask.Blueprint(
     "bp",
     __name__,
-    template_folder="./static/react",
+    template_folder="./build",
 )
 
 db_url = os.getenv("DATABASE_URL")
@@ -55,3 +55,7 @@ def signup():
 def landing():
     
     return ("Landing Page")
+
+app.register_blueprint(bp)
+
+app.run()
