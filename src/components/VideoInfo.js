@@ -8,11 +8,13 @@ export const VideoInfo = ({video}) => {
 
     return video ? (
         <>
+            <h4>{title}</h4>
             <div>
+                Here is some Video Text
                 {id}
                 {user_id}
                 {ext_source}
-                {title}
+
             </div>
 
             <div>
