@@ -8,20 +8,22 @@ export const VideoInfo = ({video}) => {
 
     return video ? (
         <>
+            <h4>{title}</h4>
             <div>
+                Here is some Video Text
                 {id}
                 {user_id}
                 {ext_source}
-                {title}
+
             </div>
 
             <div>
-                <ReactPlayer url={Ext_Movie_Source} />
+                <ReactPlayer url={ext_source} />
             </div>
 
             <div>
                 {/*External Movie Source*/}
-                <Iframe url={Ext_Movie_Source}
+                <Iframe url={ext_source}
                         width="450px"
                         height="450px"
                         id="myId"
