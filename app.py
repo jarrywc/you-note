@@ -64,7 +64,7 @@ class Note(db.Model):
     '''
     __tablename__:"Note"
     ID = db.Column(db.Integer, primary_key = True)
-    pref_location = db.Column(db.Integer)
+    location_index = db.Column(db.Integer)
     video_id =db.Column(db.Integer, db.ForeignKey(Video.ID))
     content = db.Column(db.String(280),nullable=False) 
 db.create_all()
