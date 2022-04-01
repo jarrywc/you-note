@@ -8,7 +8,6 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 from flask_oauthlib.client import OAuth, OAuthException
-
 load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__, static_url_path='/static')
@@ -46,7 +45,7 @@ def login():
 
     return ("Login")
 
-@app.route("/sign-up", methods=["GET", "POST"])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
 
     return ("Sign Up")
