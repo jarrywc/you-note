@@ -14,12 +14,12 @@ from flask_oauthlib.client import OAuth, OAuthException
 
 load_dotenv(find_dotenv())
 
-app = flask.Flask(__name__, static_folder="./build/static")
+app = flask.Flask(__name__, static_url_path='/static')
 
 bp = flask.Blueprint(
     "bp",
     __name__,
-    template_folder="./static/react",
+    template_folder="./build",
 )
 
 db_url = os.getenv("DATABASE_URL")
@@ -70,7 +70,6 @@ class Note(db.Model):
 db.create_all()
 
 # set up a separate route to serve the react index.html file generated
-# you can change the route name to be more specific.
 @bp.route("/")
 def index():
     return flask.render_template("index.html")
@@ -81,7 +80,7 @@ def login():
 
     return ("Login")
 
-@app.route("/sign-up", methods=["GET", "POST"])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
 
     return ("Sign Up")
@@ -90,4 +89,7 @@ def signup():
 def landing():
     
     return ("Landing Page")
+  
+app.register_blueprint(bp)
+
 app.run(debug=True)

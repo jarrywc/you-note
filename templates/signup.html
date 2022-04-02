@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="login-div">
+        <!-- add when styling:  <img class="icon" src="/static/younote.png" alt=""> -->
+    <h1 class="login">Sign Up</h1>
+    <!-- register form -->
+    <form  method="POST" action="/signup">
+        <input class="first" type="text" name="first" placeholder = "Email"/><br>
+        <input class="last" type="text" name="last" placeholder = "Email"/><br>
+        <input class="email-sign" type="text" name="username" placeholder = "Email"/><br>
+        <input class="pass-sign" type="text" name="username" placeholder = "Password"/><br>
+        <input class="btn" type="submit" value="Sign Up"/>
+    </form>
+
+    <div class="line"></div>
+    <!-- URL for login page -->
+    <a class="sign" href="{{url_for('login')}}">Already have an account? Login!</a>
+</div>
+</body>
+</html>
