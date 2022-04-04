@@ -28,9 +28,11 @@ function App() {
     <div className="App">
         {/*We assume the app route will be '/video_list'*/}
         {/*getServerData('/videos/'+{user_id})*/}
-        <ListSource getList={getLocalStorageData('videos')} resourceName='videos' >
+
+        <ListSource getList={getServerData('videos')} resourceName='videos' >
             <VideoInfo />
         </ListSource>
+
         <VideoInfoForm />
         {/*getServerData('/notes/'+{user_id})*/}
         {/*<ListSource getList={getLocalStorageData('notes')} resourceName='notes'>*/}
