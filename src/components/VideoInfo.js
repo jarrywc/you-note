@@ -16,12 +16,12 @@ export const VideoInfo = ({video}) => {
             </div>
 
             <div>
-                <ReactPlayer url={Ext_Movie_Source} />
+                <ReactPlayer url={ext_source} />
             </div>
 
             <div>
                 {/*External Movie Source*/}
-                <Iframe url={Ext_Movie_Source}
+                <Iframe url={ext_source}
                         width="450px"
                         height="450px"
                         id="myId"

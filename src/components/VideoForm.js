@@ -3,7 +3,7 @@ import { withEditableResource } from "./withEditableResource";
 export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo }) => {
     const {  ext_source, title  } = video || {};
 
-    return user ? (
+    return video ? (
         <>
             <label>
                 Title:
