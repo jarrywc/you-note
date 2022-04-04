@@ -10,7 +10,7 @@ import flask
 import os
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-from flask_oauthlib.client import OAuth, OAuthException
+#from flask_oauthlib.client import OAuth, OAuthException
 
 load_dotenv(find_dotenv())
 
@@ -33,7 +33,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.environ.get("SECRET_KEY")
-oauth = OAuth(app)
+#oauth = OAuth(app)
 
 db = SQLAlchemy(app)
 class Users(db.Model):
@@ -50,7 +50,7 @@ class Users(db.Model):
 class Video(db.Model):
     
     '''
-    Defines the structure of the user in the database
+    Defines the structure of the video in the database
     '''
     __tablename__:"Video"
     ID = db.Column(db.Integer, primary_key = True)
@@ -88,7 +88,7 @@ def signup():
 @app.route("/landing")
 def landing():
     
-    return ("Landing Page")
+    return flask.render_template("landing.html")
   
 app.register_blueprint(bp)
 
