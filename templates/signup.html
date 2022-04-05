@@ -11,13 +11,12 @@
     <h1 class="login">Sign Up</h1>
     <!-- register form -->
     <form  method="POST" action="/signup">
-        <input class="first" type="text" name="first" placeholder = "Email"/><br>
-        <input class="last" type="text" name="last" placeholder = "Email"/><br>
+        <input class="first" type="text" name="first" placeholder = "First Name"/><br>
+        <input class="last" type="text" name="last" placeholder = "Last Name"/><br>
         <input class="email-sign" type="text" name="email" placeholder = "Email"/><br>
         <input class="pass-sign" type="text" name="password" placeholder = "Password"/><br>
         <input class="btn" type="submit" value="Sign Up"/>
     </form>
-
     <div class="line"></div>
     <!-- URL for login page -->
     <a class="sign" href="{{url_for('login')}}">Already have an account? Login!</a>
