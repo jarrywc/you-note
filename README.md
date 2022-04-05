@@ -2,5 +2,5 @@
 
 ## Installations
 
-Werkzeug
-Flask-Login
+* Werkzeug
+* Flask-Login
