@@ -2,4 +2,5 @@
 
 ## Installations
 
-'pip install Werkzeug'
+Werkzeug
+Flask-Login
