@@ -49,7 +49,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     '''
     Defines the structure of the user in the database.
     '''
