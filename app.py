@@ -87,7 +87,8 @@ class Note(db.Model):
 db.create_all()
 
 # set up a separate route to serve the react index.html file generated
-@bp.route("/")
+@bp.route("/main")
+@login_required
 def index():
     return flask.render_template("index.html")
 
@@ -103,8 +104,20 @@ def load_user(user_id):
 #routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    if flask.request.method == "POST":
+        email = flask.request.form.get("email")
+        password = flask.request.form.get("password")
+        user = Users.query.filter_by(email=email).first()
+        # If user is in the database login user and redirect to dashboard.
+        if user and user.verify_password(password):
+            login_user(user)
+            return flask.redirect(flask.url_for("bp.index"))
+        # else flash wrong email/password and render login page
+        else:
+            flask.flash("Incorrect Email and/or Password. Check your login details and try again!")
+            return flask.render_template("login.html")
 
-    return ("Login")
+    return flask.render_template("login.html")
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -121,10 +134,10 @@ def signup():
 
     return flask.render_template("signup.html")
 
-@app.route("/landing")
+@app.route("/")
 def landing():
     
-    return ("Landing Page")
+    return flask.render_template("landing.html")
   
 app.register_blueprint(bp)
 
