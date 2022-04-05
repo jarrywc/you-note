@@ -13,6 +13,7 @@ from dotenv import load_dotenv, find_dotenv
 from flask_oauthlib.client import OAuth, OAuthException
 from data.fakeData import data
 
+
 load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__, static_folder="./build/static")
@@ -35,7 +36,7 @@ if db_url.startswith("postgres://"):
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.environ.get("SECRET_KEY")
-oauth = OAuth(app)
+#oauth = OAuth(app)
 
 db = SQLAlchemy(app)
 class Users(db.Model):
@@ -52,7 +53,7 @@ class Users(db.Model):
 class Video(db.Model):
     
     '''
-    Defines the structure of the user in the database
+    Defines the structure of the video in the database
     '''
     __tablename__:"Video"
     ID = db.Column(db.Integer, primary_key = True)
@@ -91,7 +92,7 @@ def signup():
 @app.route("/landing")
 def landing():
     
-    return ("Landing Page")
+    return flask.render_template("landing.html")
 
 @app.route("/videos")
 def videos():
