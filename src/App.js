@@ -3,6 +3,7 @@ import axios from 'axios';
 import {ListSource} from "./components/archived/ListSource";
 import {VideoInfo} from "./components/VideoInfo";
 import {VideoInfoForm} from "./components/VideoForm";
+import {Video} from "./components/upcoming/Video";
 import {NoteForm} from "./components/NoteForm";
 import {NoteInfo} from "./components/NoteInfo";
 import data from "./d.json"
@@ -43,12 +44,12 @@ function App() {
               resourceName='note'
               itemComponent={NoteInfo}
         />
-        <VideoInfoForm />
+        {/*<VideoInfoForm />*/}
         {/*getServerData('/notes/'+{user_id})*/}
         {/*<ListSource getList={getLocalStorageData('notes')} resourceName='notes'>*/}
         {/*    <NoteInfo />*/}
         {/*</ListSource>*/}
-        <NoteForm />
+        {/*<NoteForm />*/}
 
     </div>
   );
