@@ -36,11 +36,11 @@ function App() {
         {/*    <VideoInfo />*/}
         {/*</ListSource>*/}
 
-        <List getList={getLocalStorageData('videos')}
+        <List getList={getServerData('videos')}
               resourceName='video'
               itemComponent={VideoInfo}
         />
-        <List getList={getLocalStorageData('notes')}
+        <List getList={getServerData('notes')}
               resourceName='note'
               itemComponent={NoteInfo}
         />

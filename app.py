@@ -98,21 +98,21 @@ def videos():
     '''
     Need database connected to work
     '''
-    return fakeData['videos']
+    return flask.jsonify(data['videos'])
 
 @app.route("/notes")
 def notes():
     '''
     Need database connected to work
     '''
-    return fakeData['notes']
+    return flask.jsonify(data['notes'])
 
 @app.route("/users")
 def users():
     '''
     Need database connected to work
     '''
-    return fakeData['users']
+    return flask.jsonify(data['users'])
 
 # send manifest.json file
 @app.route("/manifest.json")
