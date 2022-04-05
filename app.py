@@ -10,9 +10,18 @@ import flask
 import os
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-from flask_oauthlib.client import OAuth, OAuthException
-from data.fakeData import data
+#from flask_oauthlib.client import OAuth, OAuthException
+from flask_login import (
+    LoginManager,
+    UserMixin,
+    login_user,
+    login_required,
+    logout_user,
+    current_user,
+)
+from werkzeug.security import generate_password_hash, check_password_hash
 
+from data.fakeData import data
 
 load_dotenv(find_dotenv())
 
@@ -39,7 +48,12 @@ app.secret_key = os.environ.get("SECRET_KEY")
 #oauth = OAuth(app)
 
 db = SQLAlchemy(app)
-class Users(db.Model):
+
+# Login_manager for flask-login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+class Users(UserMixin, db.Model):
     '''
     Defines the structure of the user in the database.
     '''
@@ -50,6 +64,10 @@ class Users(db.Model):
     password = db.Column(db.String(100), nullable = False)
     email = db.Column(db.String(50), nullable = False, unique = True)
     videos = db.relationship("Video", backref="User")
+
+    def verify_password(self, pwd):
+        return check_password_hash(self.password, pwd)
+
 class Video(db.Model):
     
     '''
@@ -74,22 +92,54 @@ class Note(db.Model):
 # db.create_all()
 
 # set up a separate route to serve the react index.html file generated
-@bp.route("/")
+@bp.route("/main")
+@login_required
 def index():
     return flask.render_template("index.html")
+
+# ---------------------------------------------------------------------------
+# LOGIN/REGISTER FUNCTIONS
+# ---------------------------------------------------------------------------
+
+# User loader callback to reload user ID stored in the session
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
 
 #routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    if flask.request.method == "POST":
+        email = flask.request.form.get("email")
+        password = flask.request.form.get("password")
+        user = Users.query.filter_by(email=email).first()
+        # If user is in the database login user and redirect to dashboard.
+        if user and user.verify_password(password):
+            login_user(user)
+            return flask.redirect(flask.url_for("bp.index"))
+        # else flash wrong email/password and render login page
+        else:
+            flask.flash("Incorrect Email and/or Password. Check your login details and try again!")
+            return flask.render_template("login.html")
 
-    return ("Login")
+    return flask.render_template("login.html")
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    if flask.request.method == "POST":
+        first = flask.request.form.get("first")
+        last = flask.request.form.get("last")
+        email = flask.request.form.get("email")
+        password = flask.request.form.get("password")
+        new_user = Users(first_name=first,last_name=last,email=email, password=generate_password_hash(password))
+        db.session.add(new_user)
+        db.session.commit()
+        # redirect to login page
+        return flask.redirect(flask.url_for("login"))
 
-    return ("Sign Up")
+    return flask.render_template("signup.html")
 
-@app.route("/landing")
+@app.route("/")
 def landing():
     
     return flask.render_template("landing.html")
