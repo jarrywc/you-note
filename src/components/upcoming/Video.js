@@ -1,9 +1,10 @@
 import React from 'react';
 import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
+import {withEditableResource} from "../withEditableResource";
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
-export const VideoInfo = ( { video } ) => {
+export const Video = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo }) => {
     const { id, user_id, ext_source, title } = video;
 
     console.log("VideoInfo");
@@ -21,6 +22,25 @@ export const VideoInfo = ( { video } ) => {
                 <ReactPlayer url={ext_source} />
             </div>
 
+            <p>
+                <label>
+                    Title:
+                    <input
+                        placeholder={title}
+                        value={title}
+                        onChange={e => onChangeVideo({ title: e.target.value })} />
+                </label>
+                <label>
+                    External Source/Url:
+                    <input type="ext_source"
+                           placeholder={ext_source}
+                           value={ext_source}
+                           onChange={e => onChangeVideo({ ext_source: e.target.value })} />
+                </label>
+                <button onClick={onResetVideo}>Reset</button>
+                <button onClick={onSaveVideo}>Save Changes</button>
+            </p>
+
             {/*<div>*/}
             {/*    /!*External Movie Source*!/*/}
             {/*    <Iframe url={ext_source}*/}
@@ -33,4 +53,4 @@ export const VideoInfo = ( { video } ) => {
             {/*</div>*/}
         </>
     ): <p>Video loading...</p>;
-}
+}, 'videos', 'video');

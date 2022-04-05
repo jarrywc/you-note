@@ -19,16 +19,19 @@ export const withEditableResource = (Component, resourcePath, resourceName) => {
         }, []);
 
         const onChange = changes => {
+            console.log('Changed '+{changes})
             setData({ ...data, ...changes });
         }
 
         const onSave = async () => {
+            console.log('Saved')
             const response = await axios.post(resourcePath, { [resourceName]: data });
             setOriginalData(response.data);
             setData(response.data);
         }
 
         const onReset = () => {
+            console.log('Reset')
             setData(originalData);
         }
 
