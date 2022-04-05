@@ -6,6 +6,7 @@ import {withEditableResource} from "../withEditableResource";
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const Video = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo }) => {
     const { id, user_id, ext_source, title } = video;
+    // User ID will need to be locked on the backend by conditionals that prevent changing a user_id for a video instance
 
     console.log("VideoInfo");
     console.log("id:"+id)
