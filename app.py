@@ -11,10 +11,11 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 from flask_oauthlib.client import OAuth, OAuthException
+from data.fakeData import data
 
 load_dotenv(find_dotenv())
 
-app = flask.Flask(__name__, static_url_path='/static')
+app = flask.Flask(__name__, static_folder="./build/static")
 
 bp = flask.Blueprint(
     "bp",
@@ -25,7 +26,8 @@ bp = flask.Blueprint(
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
-app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+# app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+
 
 # If we add Google OAuth
 # app.config['GOOGLE_CLIENT_ID'] = os.getenv("GOOGLE_CLIENT_ID")
@@ -67,7 +69,8 @@ class Note(db.Model):
     location_index = db.Column(db.Integer)
     video_id =db.Column(db.Integer, db.ForeignKey(Video.ID))
     content = db.Column(db.String(280),nullable=False) 
-db.create_all()
+
+# db.create_all()
 
 # set up a separate route to serve the react index.html file generated
 @bp.route("/")
@@ -89,7 +92,33 @@ def signup():
 def landing():
     
     return ("Landing Page")
-  
+
+@app.route("/videos")
+def videos():
+    '''
+    Need database connected to work
+    '''
+    return fakeData['videos']
+
+@app.route("/notes")
+def notes():
+    '''
+    Need database connected to work
+    '''
+    return fakeData['notes']
+
+@app.route("/users")
+def users():
+    '''
+    Need database connected to work
+    '''
+    return fakeData['users']
+
+# send manifest.json file
+@app.route("/manifest.json")
+def manifest():
+    return flask.send_from_directory("./build", "manifest.json")
+
 app.register_blueprint(bp)
 
-app.run(debug=True)
+app.run(host="0.0.0.0", port=8080, debug=True)
