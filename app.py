@@ -5,7 +5,6 @@
 # pylint: disable=W0603
 import email
 from enum import unique
-from turtle import title
 import flask
 import os
 from flask_sqlalchemy import SQLAlchemy
