@@ -3,11 +3,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css" >
     <title>Login</title>
 </head>
 <body>
+    <div class="navbar">
+        <img class="nav-icon" src="/static/younote.png" alt="">
+        <h1 class="nav-header">YouNote</h1>
+        <a class="home-btn" style="text-decoration:none" href="{{url_for('landing')}}">Home</a>
+        <a class="sign-btn" style="text-decoration:none" href="{{url_for('signup')}}">Sign Up</a>
+    </div>
+    <br>
+    <br>
+    <br>
     <div class="login-div">
-     <!-- add when styling:  <img class="icon" src="/static/younote.png" alt=""> -->
+    <!-- <img class="icon" src="/static/younote.png" alt=""> -->
     <h1 class="login">Login</h1>
     <!-- Login form -->
     <form  method="POST" action="/login">
