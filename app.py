@@ -26,9 +26,8 @@ load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__)
 
-# bp = flask.Blueprint("bp", __name__, template_folder="./static/react",)
+bp = flask.Blueprint("bp", __name__, template_folder="./static/react",)
 
-bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
