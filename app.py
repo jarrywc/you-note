@@ -60,9 +60,12 @@ class Users(UserMixin, db.Model):
     first_name = db.Column(db.String(50),nullable=False)
     last_name = db.Column(db.String(50),nullable=False)
     ID = db.Column(db.Integer, primary_key = True)
-    password = db.Column(db.String(100), nullable = False)
+    password = db.Column(db.String(120), nullable = False)
     email = db.Column(db.String(50), nullable = False, unique = True)
     videos = db.relationship("Video", backref="User")
+
+    def get_id(self):
+           return (self.ID)
 
     def verify_password(self, pwd):
         return check_password_hash(self.password, pwd)
@@ -87,7 +90,8 @@ db.create_all()
 
 
 # set up a separate route to serve the react index.html file generated
-@bp.route("/")
+@bp.route("/main")
+@login_required
 def index():
     return flask.render_template("index.html")
 
@@ -104,8 +108,7 @@ def load_user(user_id):
 #routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    '''
-    commented it out until database works 
+
 
     if flask.request.method == "POST":
         email = flask.request.form.get("email")
@@ -119,28 +122,28 @@ def login():
         else:
             flask.flash("Incorrect Email and/or Password. Check your login details and try again!")
             return flask.render_template("login.html")
-        '''
+
     return flask.render_template("login.html")
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    '''
-    commented it out until database works 
+
+
 
     if flask.request.method == "POST":
         first = flask.request.form.get("first")
         last = flask.request.form.get("last")
         email = flask.request.form.get("email")
         password = flask.request.form.get("password")
-        new_user = Users(first_name=first,last_name=last,email=email, password=generate_password_hash(password))
+        new_user = Users(first_name=first,last_name=last,email=email, password=generate_password_hash(password, method="sha256"))
         db.session.add(new_user)
         db.session.commit()
         # redirect to login page
         return flask.redirect(flask.url_for("login"))
-    '''
+   
     return flask.render_template("signup.html")
 
-@app.route("/landing")
+@app.route("/")
 def landing():
     
     return flask.render_template("landing.html")
