@@ -5,7 +5,6 @@
 # pylint: disable=W0603
 import email
 from enum import unique
-from turtle import title
 import flask
 import os
 from flask_sqlalchemy import SQLAlchemy
@@ -27,11 +26,9 @@ load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__)
 
-bp = flask.Blueprint(
-    "bp",
-    __name__,
-     template_folder="./static/react",
-)
+# bp = flask.Blueprint("bp", __name__, template_folder="./static/react",)
+
+bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
@@ -176,4 +173,7 @@ def manifest():
 
 app.register_blueprint(bp)
 
-app.run(host="0.0.0.0", port=8080, debug=True)
+if __name__ == "__main__":
+    app.run(
+        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True
+    )
