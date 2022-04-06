@@ -25,23 +25,23 @@ from data.fakeData import data
 
 load_dotenv(find_dotenv())
 
-app = flask.Flask(__name__, static_folder="./build/static")
+app = flask.Flask(__name__)
 
 bp = flask.Blueprint(
     "bp",
     __name__,
-    template_folder="./build",
+     template_folder="./static/react",
 )
 
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
-# app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 
 
 # If we add Google OAuth
-# app.config['GOOGLE_CLIENT_ID'] = os.getenv("GOOGLE_CLIENT_ID")
-# app.config['GOOGLE_CLIENT_SECRET'] = os.getenv("GOOGLE_CLIENT_SECRET")
+#app.config['GOOGLE_CLIENT_ID'] = os.getenv("GOOGLE_CLIENT_ID")
+#app.config['GOOGLE_CLIENT_SECRET'] = os.getenv("GOOGLE_CLIENT_SECRET")
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -53,10 +53,9 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 class Users(UserMixin, db.Model):
-    '''
-    Defines the structure of the user in the database.
-    '''
+
     __tablename__:"Users"
     first_name = db.Column(db.String(50),nullable=False)
     last_name = db.Column(db.String(50),nullable=False)
@@ -69,10 +68,7 @@ class Users(UserMixin, db.Model):
         return check_password_hash(self.password, pwd)
 
 class Video(db.Model):
-    
-    '''
-    Defines the structure of the video in the database
-    '''
+
     __tablename__:"Video"
     ID = db.Column(db.Integer, primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey(Users.ID))
@@ -80,20 +76,18 @@ class Video(db.Model):
     title = db.Column(db.String(100), nullable=False)
     notes = db.relationship("Note", backref="Video")
 class Note(db.Model):
-    '''
-    defines the structure of a note in the database
-    '''
+
     __tablename__:"Note"
     ID = db.Column(db.Integer, primary_key = True)
     location_index = db.Column(db.Integer)
     video_id =db.Column(db.Integer, db.ForeignKey(Video.ID))
     content = db.Column(db.String(280),nullable=False) 
 
-# db.create_all()
+db.create_all()
+
 
 # set up a separate route to serve the react index.html file generated
-@bp.route("/main")
-@login_required
+@bp.route("/")
 def index():
     return flask.render_template("index.html")
 
@@ -102,6 +96,7 @@ def index():
 # ---------------------------------------------------------------------------
 
 # User loader callback to reload user ID stored in the session
+
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
@@ -109,6 +104,9 @@ def load_user(user_id):
 #routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    '''
+    commented it out until database works 
+
     if flask.request.method == "POST":
         email = flask.request.form.get("email")
         password = flask.request.form.get("password")
@@ -121,11 +119,14 @@ def login():
         else:
             flask.flash("Incorrect Email and/or Password. Check your login details and try again!")
             return flask.render_template("login.html")
-
+        '''
     return flask.render_template("login.html")
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    '''
+    commented it out until database works 
+
     if flask.request.method == "POST":
         first = flask.request.form.get("first")
         last = flask.request.form.get("last")
@@ -136,10 +137,10 @@ def signup():
         db.session.commit()
         # redirect to login page
         return flask.redirect(flask.url_for("login"))
-
+    '''
     return flask.render_template("signup.html")
 
-@app.route("/")
+@app.route("/landing")
 def landing():
     
     return flask.render_template("landing.html")

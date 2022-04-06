@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 
+
 export const useLocalData = getLocalData => {
     const [state, setState] = useState([]);
     useEffect(() => {
