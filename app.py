@@ -165,18 +165,76 @@ def landing():
     
     return flask.render_template("landing.html")
 
-@app.route("/videos", methods=["GET", "POST"])
-def videos():
+@app.route("/user", methods=["GET", "POST"])
+def users():
     '''
-    Need database connected to work
+    Allows user to edit username, password, etc
     '''
-    return flask.jsonify(data['videos'])
+    return flask.jsonify(data['users'])
+
+@app.route("/get_videos", methods=["GET", "POST"])
+def get_videos():
+    '''
+    Returns all videos in DB for the user logged in
+    '''
+    print(f"Current User {current_user.ID}")
+    videos = Video.query.filter_by(ID=int(current_user.ID)).all()
+    video_list = flask.jsonify(videos)
+    print(f"Video List{video_list}")
+    return video_list
 
 @app.route("/video", methods=["GET", "POST"])
 def video():
     '''
-    Need database connected to work
+    Video app route is for individual video info editing
+    The function takes the requested add/edit and returns the same data if successful, appending ID if New
     '''
+    #
+    if flask.request.method == "POST":
+        # Setup a request JSON Obj
+        req = flask.request.json
+        print(f'Post JSON is {req}')
+
+        # Start DB Session to send updated (or new) data to DB
+        db.session.begin()
+        # Check that ID -> if ID is 0, its a NEW NOTE
+        req_id = req["ID"]
+        # NEW ? EDIT
+        if req_id == 0:
+            print(f"   Creating new video: {req}")
+            # Remove the temp ID from req
+            req.pop("ID", None)
+            # Unpack Dict Obj
+            video = Video(**req)
+            print(f'        Post Video is {video}')
+            # Add note to DB
+            db.session.add(video)
+            # Commit change
+            c = db.session.commit()
+            print(f"            Commit: {c}")
+            # Refresh and retrieve new note
+            db.session.refresh(video)
+            video_id = video.ID
+            print(f"            New video ID is {video_id}")
+            # Convert back to JSON Obj for response
+            video_json = flask.jsonify(video)
+            print(f'Post Response JSON is {video_json}')
+            return video_json
+        else:
+            print(f"  Updating values for ID: {req_id}")
+            # Unpack Dict Obj
+            video = Video(**req)
+            print(f'         Post Video is {video}')
+            update_video = Video.query.filter_by(ID=req_id).first()
+            update_video = video
+            print(f'         Update Video is {update_video}')
+            # Commit change
+            c = db.session.commit()
+            print(f"            Commit: {c}")
+            # Convert back to JSON Obj for response
+            video_json = flask.jsonify(update_video)
+            print(f'Post Response JSON is {video_json}')
+            return video_json
     return flask.jsonify(data['videos'])
 
 @app.route("/note", methods=["GET", "POST"])
@@ -228,68 +286,6 @@ def notes():
         print(f'Post Response JSON is {note_json}')
         return note_json
     return flask.jsonify(data['notes'])
-
-
-@app.route("/user", methods=["GET", "POST"])
-def users():
-    '''
-    Need database connected to work
-    '''
-    return flask.jsonify(data['users'])
-
-@app.route("/test_video", methods=["GET", "POST"])
-def test_video():
-    '''
-    Video app route is for individual video info editing
-    The function takes the request
-    '''
-    #
-    if flask.request.method == "POST":
-        # Setup a request JSON Obj
-        req = flask.request.json
-        print(f'Post JSON is {req}')
-
-        # Start DB Session to send updated (or new) data to DB
-        db.session.begin()
-        # Check that ID -> if ID is 0, its a NEW NOTE
-        req_id = req["ID"]
-        # NEW ? EDIT
-        if req_id == 0:
-            print(f"   Creating new video: {req}")
-            # Remove the temp ID from req
-            req.pop("ID", None)
-            # Unpack Dict Obj
-            video = Video(**req)
-            print(f'        Post Video is {video}')
-            # Add note to DB
-            db.session.add(video)
-            # Commit change
-            c = db.session.commit()
-            print(f"            Commit: {c}")
-            # Refresh and retrieve new note
-            db.session.refresh(video)
-            video_id = video.ID
-            print(f"            New video ID is {video_id}")
-            # Convert back to JSON Obj for response
-            video_json = flask.jsonify(video)
-            print(f'Post Response JSON is {video_json}')
-            return video_json
-        else:
-            print(f"  Updating values for ID: {req_id}")
-            # Unpack Dict Obj
-            video = Video(**req)
-            print(f'         Post Video is {video}')
-            update_video = Video.query.filter_by(ID=req_id).first()
-            update_video = video
-            print(f'         Update Video is {update_video}')
-            # Commit change
-            c = db.session.commit()
-            print(f"            Commit: {c}")
-            # Convert back to JSON Obj for response
-            video_json = flask.jsonify(update_video)
-            print(f'Post Response JSON is {video_json}')
-            return video_json
-    return flask.jsonify(data['videos'])
 
 # send manifest.json file
 @app.route("/manifest.json")
