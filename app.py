@@ -107,7 +107,7 @@ db.create_all()
 
 
 # set up a separate route to serve the react index.html file generated
-@bp.route("/main")
+@bp.route("/index")
 @login_required
 def index():
     return flask.render_template("index.html")
@@ -178,7 +178,7 @@ def get_videos():
     Returns all videos in DB for the user logged in
     '''
     print(f"Current User {current_user.ID}")
-    videos = Video.query.filter_by(ID=int(current_user.ID)).all()
+    videos = Video.query.filter_by(user_id=int(current_user.ID)).all()
     video_list = flask.jsonify(videos)
     print(f"Video List{video_list}")
     return video_list
