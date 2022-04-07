@@ -1,5 +1,11 @@
 import './App.css';
 import axios from 'axios';
+import {
+    Link,
+    Route,
+    Routes,
+    Outlet,
+} from 'react-router-dom';
 import {ListSource} from "./components/archived/ListSource";
 import {VideoInfo} from "./components/VideoInfo";
 import {VideoInfoForm} from "./components/VideoForm";
@@ -8,6 +14,8 @@ import {NoteForm} from "./components/NoteForm";
 import {NoteInfo} from "./components/NoteInfo";
 import data from "./d.json"
 import {List} from "./components/List";
+import {VideoNote} from "./components/VideoNote";
+import {useState} from "react";
 
 const getServerData = url => async () => {
   const response = await axios.get(url);
@@ -25,25 +33,61 @@ const getLocalStorageData = key => () => {
 }
 function App() {
 
-  const user_id = "some_user_id"
+  //const user_id = "some_user_id";
+  const [video, setVideo] = useState({});
+
+  const setThisVideo = (v) => {
+      console.log('App Received: '+v);
+      setVideo(v);
+      console.log('App Video Set To: '+video);
+  }
+
 
   return (
     <div className="App">
+        <div>
+            <List getList={getServerData('/get_videos')}
+                  resourceName='video'
+                  itemComponent={VideoInfo}
+                  selectItem={setThisVideo}
+            />
+        </div>
+
+
+        {/*<Routes>*/}
+        {/*    <Route*/}
+        {/*        index*/}
+        {/*        element={*/}
+        {/*            <main style={{ padding: "1rem" }}>*/}
+        {/*                <p>Select an Video</p>*/}
+        {/*            </main>*/}
+        {/*        }/>*/}
+        {/*    <Route path="/videos" element={*/}
+        {/*        <List getList={getServerData('/get_videos')}*/}
+        {/*              resourceName='video'*/}
+        {/*              itemComponent={VideoInfo}*/}
+        {/*              selectItem={setThisVideo}*/}
+        {/*        />*/}
+        {/*    }>*/}
+        {/*        <Route path=":videoId" element={<VideoNote video={video} />} />*/}
+        {/*    </Route>*/}
+
+        {/*    <Route*/}
+        {/*        path="*"*/}
+        {/*        element={*/}
+        {/*            <main style={{ padding: "1rem" }}>*/}
+        {/*                <p>There's nothing here!</p>*/}
+        {/*            </main>*/}
+        {/*        }/>*/}
+        {/*</Routes>*/}
         {/*We assume the app route will be '/video_list'*/}
         {/*getServerData('/videos/'+{user_id})*/}
 
-        {/*<ListSource getList={getLocalStorageData('videos')} resourceName='video' >*/}
-        {/*    <VideoInfo />*/}
-        {/*</ListSource>*/}
+        {/*<List getList={getServerData('notes')}*/}
+        {/*      resourceName='note'*/}
+        {/*      itemComponent={NoteInfo}*/}
+        {/*/>*/}
 
-        <List getList={getServerData('videos')}
-              resourceName='video'
-              itemComponent={VideoInfo}
-        />
-        <List getList={getServerData('notes')}
-              resourceName='note'
-              itemComponent={NoteInfo}
-        />
         {/*<VideoInfoForm />*/}
         {/*getServerData('/notes/'+{user_id})*/}
         {/*<ListSource getList={getLocalStorageData('notes')} resourceName='notes'>*/}
