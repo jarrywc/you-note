@@ -15,8 +15,8 @@ export const VideoInfo = ( { video, select } ) => {
         <h4><Link
             style={{ display: "block", margin: "1rem 0" }}
             onClick={select(video)}
-            to={`/videos/${id}`}
-            key={id}>
+            to={`/videos/${ID}`}
+            key={ID}>
                 {title}
         </Link></h4>
         <div>
