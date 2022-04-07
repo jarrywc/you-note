@@ -3,12 +3,12 @@ import Iframe from "react-iframe";
 import React from "react";
 
 export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo }) => {
-    const {  id, user_id, ext_source, title  } = video || {};
+    const {  ID, user_id, ext_video_id, title  } = video || {};
 
     return video ? (
         <>
             <p>
-                <Iframe url={ext_source}
+                <Iframe url={ext_video_id}
                        width="450px"
                        height="450px"
                        id="myId"
@@ -26,10 +26,10 @@ export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSav
                 </label>
                 <label>
                     External Source/Url:
-                    <input type="ext_source"
-                           placeholder={ext_source}
-                           value={ext_source}
-                           onChange={e => onChangeVideo({ ext_source: e.target.value })} />
+                    <input type="ext_video_id"
+                           placeholder={ext_video_id}
+                           value={ext_video_id}
+                           onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
                 </label>
                 <button onClick={onResetVideo}>Reset</button>
                 <button onClick={onSaveVideo}>Save Changes</button>

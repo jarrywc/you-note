@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const VideoInfo = ( { video, select } ) => {
-    const { id, user_id, ext_source, title } = video;
+    const { ID, user_id, ext_video_id, title } = video;
 
     console.log("VideoInfo");
-    console.log("id:"+id)
+    console.log("id:"+ID)
     return video ? (
         <>
 
@@ -20,18 +20,18 @@ export const VideoInfo = ( { video, select } ) => {
                 {title}
         </Link></h4>
         <div>
-            {id}
+            {ID}
             {user_id}
-            {ext_source}
+            {ext_video_id}
         </div>
 
         <div>
-            <ReactPlayer url={ext_source} />
+            <ReactPlayer url={ext_video_id} />
         </div>
 
             {/*<div>*/}
             {/*    /!*External Movie Source*!/*/}
-            {/*    <Iframe url={ext_source}*/}
+            {/*    <Iframe url={ext_video_id}*/}
             {/*            width="450px"*/}
             {/*            height="450px"*/}
             {/*            id="myId"*/}
