@@ -1,5 +1,5 @@
 import React from 'react';
-import Iframe from 'react-iframe';
+// import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 
