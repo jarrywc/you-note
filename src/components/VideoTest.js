@@ -28,7 +28,7 @@ export const VideoTest = ( { video, select } ) => {
 
     const onSaveVideo = async () => {
         console.log('Saved')
-        const response = await axios.post('video', { ['video']: data });
+        const response = await axios.post('video', { data });
         setOriginalData(response.data);
         setData(response.data);
     }
