@@ -1,21 +1,25 @@
 import './App.css';
 import axios from 'axios';
-import {
-    Link,
-    Route,
-    Routes,
-    Outlet,
-} from 'react-router-dom';
-import {ListSource} from "./components/archived/ListSource";
-import {VideoInfo} from "./components/VideoInfo";
-import {VideoInfoForm} from "./components/VideoForm";
-import {Video} from "./components/upcoming/Video";
-import {NoteForm} from "./components/NoteForm";
-import {NoteInfo} from "./components/NoteInfo";
+// import {
+//     Link,
+//     Route,
+//     Routes,
+//     Outlet,
+// } from 'react-router-dom';
+// import {ListSource} from "./components/archived/ListSource";
+// import {VideoInfoForm} from "./components/VideoForm";
+// import {Video} from "./components/upcoming/Video";
+// import {NoteForm} from "./components/NoteForm";
+// import {NoteInfo} from "./components/NoteInfo";
+// import {VideoNote} from "./components/VideoNote";
+
 import data from "./d.json"
 import {List} from "./components/List";
+import {VideoInfo} from "./components/VideoInfo";
+import React, {createContext, useCallback, useReducer, useState} from "react";
 import {VideoNote} from "./components/VideoNote";
-import {useState} from "react";
+import {Routes, Route} from "react-router-dom"
+
 
 const getServerData = url => async () => {
   const response = await axios.get(url);
@@ -31,27 +35,39 @@ const getLocalStorageData = key => () => {
     return re
     // return localStorage.getItem(key);
 }
+
+export const VNContext = createContext(
+    { ID:0, user_id:0, ext_video_id:"", title:"" }
+);
+
+function Index() {
+    // This hook provides a VideoNote context accessible accross app
+    const [videoNote, setVideoNote] = useState([]);
+
+    const stateTester = (state) => {
+        console.log("State changed from child"+state);
+    }
+    return (
+        <>
+        {/*<VNContext.Provider value={{videoNote, setVideoNote}}>*/}
+        <List getList={getServerData('/get_videos')}
+              resourceName='video'
+              itemComponent={VideoInfo}
+              activeVideoNote={stateTester}
+        />
+        {/*<VideoNote />*/}
+        {/*</VNContext.Provider>*/}
+        </>
+    );
+}
+
 function App() {
-
-  //const user_id = "some_user_id";
-  const [video, setVideo] = useState({});
-
-  const setThisVideo = (v) => {
-      console.log('App Received: '+v);
-      setVideo(v);
-      console.log('App Video Set To: '+video);
-  }
-
 
   return (
     <div className="App">
-        <div>
-            <List getList={getServerData('/get_videos')}
-                  resourceName='video'
-                  itemComponent={VideoInfo}
-                  selectItem={setThisVideo}
-            />
-        </div>
+        <Routes>
+            <Route path="/index" element={<Index/>}/>
+        </Routes>
 
 
         {/*<Routes>*/}

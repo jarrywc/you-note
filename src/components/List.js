@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import {Link, Outlet} from "react-router-dom";
 
 export const List = ({
         getList = ()=> {},
-        selectItem = () => {},
+        activeVideoNote = ()=>{},
         resourceName,
         itemComponent: ItemComponent,
     }) => {
@@ -24,15 +24,18 @@ export const List = ({
             console.log("ListSource || Using Effect, we obtained:");
             console.log(l);
         })();
+    // eslint-disable-next-line
     }, []);
     console.log('ListSource || List Loaded as:');
     console.log(list);
 
+    //const video_note = useContext(VNContext);
+
     return (
         <>
-            <Link to="/videos" onClick={toggleListActive}>Change State</Link>
-            {list.map((item, i) => (
-                <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
+            <Link to="/index" onClick={toggleListActive}>{ listActive ? 'Hide List': 'Show List'}</Link>
+            { listActive && list.map((item, i) => (
+                <ItemComponent sort={i} activeVideoNote={activeVideoNote} {...{ [resourceName]: item }} />
             ))}
             <Outlet />
         </>

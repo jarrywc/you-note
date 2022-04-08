@@ -1,7 +1,8 @@
 import {SplitScreen} from "./style_tools/SplitScreen";
-import {Link, useParams} from "react-router-dom";
+import {Link, Outlet, useParams} from "react-router-dom";
 import ReactPlayer from "react-player";
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
+import {VNContext} from "../App";
 
 // Page entry -> props: video id
 
@@ -12,20 +13,19 @@ import React from "react";
 // Get the video's notes
 
 
-const LeftHandComponent = ({ name, video }) => {
-    const { id, user_id, ext_source, title } = video;
+const LeftHandComponent = ({ video }) => {
+    const { ID, user_id, ext_source, title } = video;
 
     return (
         <>
-        <h1 style={{ backgroundColor: 'green' }}>{name}</h1>
+        <h1 style={{ backgroundColor: 'green' }}>{title}</h1>
             <h4><Link
                 style={{ display: "block", margin: "1rem 0" }}
-                to={`/videos/${id}`}
-                key={id}>
+                key={ID}>
                 {title}
             </Link></h4>
             <div>
-                {id}
+                {ID}
                 {user_id}
                 {ext_source}
             </div>
@@ -47,16 +47,18 @@ const RightHandComponent = ({ message }) => {
     );
 }
 // Props includes the video object
-export const VideoNote = ({video}) => {
-
+export const VideoNote = () => {
     let params = useParams();
-
+    const { videoNote } = useContext(VNContext);
     return (
-        <>
-        <SplitScreen leftWeight={3} rightWeight={2}>
-            <LeftHandComponent name={params.videoId} video={video} />
-            <RightHandComponent message="Hello" />
-        </SplitScreen>
-        </>
+        <VNContext.Consumer>
+        {
+            <SplitScreen leftWeight={3} rightWeight={2}>
+                <LeftHandComponent video={videoNote} />
+                <RightHandComponent message="Hello" />
+            </SplitScreen>
+        }
+        <Outlet />
+        </VNContext.Consumer>
     );
 }
