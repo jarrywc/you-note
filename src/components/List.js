@@ -24,16 +24,20 @@ export const List = ({
             console.log("ListSource || Using Effect, we obtained:");
             console.log(l);
         })();
+    // eslint-disable-next-line
     }, []);
     console.log('ListSource || List Loaded as:');
     console.log(list);
 
     return (
         <>
-            <Link to="/videos" onClick={toggleListActive}>Change State</Link>
-            {list.map((item, i) => (
-                <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
-            ))}
+            <Link to="index" onClick={toggleListActive}>{ listActive ? 'Hide List': 'Show List'}</Link>
+            {
+                listActive &&
+                list.map((item, i) => (
+                    <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
+                ))
+            }
             <Outlet />
         </>
     )

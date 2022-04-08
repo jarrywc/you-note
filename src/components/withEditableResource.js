@@ -12,7 +12,7 @@ export const withEditableResource = (Component, resourcePath, resourceName) => {
 
         useEffect(() => {
             (async () => {
-                const response = await axios.get(resourcePath);
+                const response = await axios.get(resourcePath, data);
                 setOriginalData(response.data);
                 setData(response.data);
             })();

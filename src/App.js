@@ -1,20 +1,20 @@
 import './App.css';
 import axios from 'axios';
-import {
-    Link,
-    Route,
-    Routes,
-    Outlet,
-} from 'react-router-dom';
-import {ListSource} from "./components/archived/ListSource";
+// import {
+//     Link,
+//     Route,
+//     Routes,
+//     Outlet,
+// } from 'react-router-dom';
+// import {ListSource} from "./components/archived/ListSource";
 import {VideoInfo} from "./components/VideoInfo";
-import {VideoInfoForm} from "./components/VideoForm";
-import {Video} from "./components/upcoming/Video";
-import {NoteForm} from "./components/NoteForm";
-import {NoteInfo} from "./components/NoteInfo";
-import data from "./d.json"
+// import {VideoInfoForm} from "./components/VideoForm";
+// import {Video} from "./components/upcoming/Video";
+// import {NoteForm} from "./components/NoteForm";
+// import {NoteInfo} from "./components/NoteInfo";
+// import data from "./d.json"
 import {List} from "./components/List";
-import {VideoNote} from "./components/VideoNote";
+// import {VideoNote} from "./components/VideoNote";
 import {useState} from "react";
 
 const getServerData = url => async () => {
@@ -22,15 +22,15 @@ const getServerData = url => async () => {
   return response.data;
 }
 
-const getLocalStorageData = key => () => {
-    // const response = await axios.get('./testData.json');
-    // console.log("response: "+response.data)
-    const re = data[key]
-    console.log('Local Storage found:')
-    console.log(re)
-    return re
-    // return localStorage.getItem(key);
-}
+// const getLocalStorageData = key => () => {
+//     // const response = await axios.get('./testData.json');
+//     // console.log("response: "+response.data)
+//     const re = data[key]
+//     console.log('Local Storage found:')
+//     console.log(re)
+//     return re
+//     // return localStorage.getItem(key);
+// }
 function App() {
 
   //const user_id = "some_user_id";
@@ -46,6 +46,8 @@ function App() {
   return (
     <div className="App">
         <div>
+
+
             <List getList={getServerData('/get_videos')}
                   resourceName='video'
                   itemComponent={VideoInfo}
