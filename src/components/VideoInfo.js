@@ -1,7 +1,6 @@
 import React from 'react';
 // import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
-import { Link } from "react-router-dom";
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const VideoInfo = ( { video, select } ) => {
@@ -12,13 +11,12 @@ export const VideoInfo = ( { video, select } ) => {
     return video ? (
         <>
 
-        <h4><Link
+        <h4><button
             style={{ display: "block", margin: "1rem 0" }}
             onClick={select(video)}
-            to={`/videos/${ID}`}
             key={ID}>
                 {title}
-        </Link></h4>
+        </button></h4>
         <div>
             {ID}
             {user_id}

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Link, Outlet} from "react-router-dom";
+//import {Link, Outlet} from "react-router-dom";
 
 export const List = ({
         getList = ()=> {},
@@ -10,11 +10,12 @@ export const List = ({
 
     const [list, setList] = useState([]);
     const [listActive, setListActive] = useState(false);
-
+    const [buttonText, setButtonText] = useState("Show List");
     const toggleListActive = () => {
         console.log("App Video List changed from "+listActive);
         setListActive(!listActive);
         console.log(" to "+listActive);
+        setButtonText(listActive?'Hide List':'Show List')
     }
 
     useEffect(() => {
@@ -29,16 +30,17 @@ export const List = ({
     console.log('ListSource || List Loaded as:');
     console.log(list);
 
+
     return (
         <>
-            <Link to="index" onClick={toggleListActive}>{ listActive ? 'Hide List': 'Show List'}</Link>
+            <button onClick={toggleListActive}>{buttonText}</button>
             {
-                listActive &&
+                //listActive &&
                 list.map((item, i) => (
                     <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
                 ))
             }
-            <Outlet />
+            {/*<Outlet />*/}
         </>
     )
 }
