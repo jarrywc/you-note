@@ -1,33 +1,46 @@
 import { withEditableResource } from "./withEditableResource";
-import Iframe from "react-iframe";
+// import Iframe from "react-iframe";
 import React from "react";
+import ReactPlayer from "react-player";
+import {List} from "./List";
+import {NoteInfo} from "./NoteInfo";
 
-export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo }) => {
-    const {  ID, user_id, ext_video_id, title  } = video || {};
-
+export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo, select }) => {
+    console.log("Video Form Received"+video)
+    const {  ID, ext_video_id, title, notes  } = video || {};
+    console.log("VideoInfo");
+    console.log("id:"+ID)
     return video ? (
         <>
             <p>
-                <Iframe url={ext_video_id}
-                       width="450px"
-                       height="450px"
-                       id="myId"
-                       className="myMovie"
-                       display="initial"
-                       position="relative"/>
+                <h4><button
+                    style={{ display: "block", margin: "1rem 0" }}
+                    onClick={select(video)}
+                    key={ID}>
+                    {title}
+                </button></h4>
+                <div>
+                    <ReactPlayer url={ext_video_id} />
+                </div>
+                <div>
+                    <List getList={()=>notes}
+                          resourceName='note'
+                          itemComponent={NoteInfo}
+
+                    />
+                </div>
             </p>
             <p>
                 <label>
                     Title:
                     <input
-                        placeholder={title}
+                        type="text"
                         value={title}
                         onChange={e => onChangeVideo({ title: e.target.value })} />
                 </label>
                 <label>
                     External Source/Url:
-                    <input type="ext_video_id"
-                           placeholder={ext_video_id}
+                    <input type="text"
                            value={ext_video_id}
                            onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
                 </label>
@@ -37,4 +50,4 @@ export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSav
 
         </>
     ) : <p>Loading...</p>;
-}, 'videos', 'video');
+}, 'video', 'video');

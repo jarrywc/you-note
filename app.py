@@ -64,7 +64,7 @@ class Users(UserMixin, db.Model):
     ID = db.Column(db.Integer, primary_key = True)
     password = db.Column(db.String(120), nullable = False)
     email = db.Column(db.String(50), nullable = False, unique = True)
-    videos = db.relationship("Video", backref="User")
+    videos = db.relationship("Video", backref="Users")
 
     def get_id(self):
            return (self.ID)
@@ -94,14 +94,14 @@ class Note(db.Model):
     video_id: int
     content: str
 
-    location_index = db.Column(db.Integer)
-    video_id =db.Column(db.Integer, db.ForeignKey(Video.ID))
-    content = db.Column(db.String(500),nullable=False)
     __tablename__:"Note"
     ID = db.Column(db.Integer, primary_key = True)
     location_index = db.Column(db.Integer)
     video_id =db.Column(db.Integer, db.ForeignKey(Video.ID))
-    content = db.Column(db.String(280),nullable=False) 
+    content = db.Column(db.String(500),nullable=False)
+
+
+
 
 db.create_all()
 
@@ -178,8 +178,15 @@ def get_videos():
     Returns all videos in DB for the user logged in
     '''
     print(f"Current User {current_user.ID}")
+
+    user_stuff = Users.query.filter_by(ID=int(current_user.ID)).all()
+    print(f"User stuff is {user_stuff}")
     videos = Video.query.filter_by(user_id=int(current_user.ID)).all()
+    print(f"Video List is {videos}")
     video_list = flask.jsonify(videos)
+    # We could get ID from the first
+    # video_json = video_list.get_json()
+
     print(f"Video List{video_list}")
     return video_list
 
@@ -198,8 +205,12 @@ def video():
         # Start DB Session to send updated (or new) data to DB
         db.session.begin()
         # Check that ID -> if ID is 0, its a NEW NOTE
-        req_id = req["ID"]
+        try:
+            req_id = req["ID"]
+        except KeyError:
+            req_id = 1
         # NEW ? EDIT
+        ext_vid_id = req["ext_video_id"]
         if req_id == 0:
             print(f"   Creating new video: {req}")
             # Remove the temp ID from req
@@ -216,26 +227,36 @@ def video():
             db.session.refresh(video)
             video_id = video.ID
             print(f"            New video ID is {video_id}")
-            # Convert back to JSON Obj for response
-            video_json = flask.jsonify(video)
+            # Convert back to Response Obj for response
+            video_r= flask.jsonify(update_video)
+            video_json = video_r.get_json()
+            print(f"{video_json}")
+            pass_id = {"ID":video_id}
+            video_json.update(pass_id)
             print(f'Post Response JSON is {video_json}')
             return video_json
         else:
-            print(f"  Updating values for ID: {req_id}")
+            print(f"  Updating values for ID: {ext_vid_id}")
             # Unpack Dict Obj
             video = Video(**req)
             print(f'         Post Video is {video}')
-            update_video = Video.query.filter_by(ID=req_id).first()
+            update_video = Video.query.filter_by(ext_video_id=ext_vid_id).first()
             update_video = video
             print(f'         Update Video is {update_video}')
             # Commit change
             c = db.session.commit()
             print(f"            Commit: {c}")
-            # Convert back to JSON Obj for response
-            video_json = flask.jsonify(update_video)
+            # Convert back to Response Obj for response
+            video_r= flask.jsonify(update_video)
+            video_json = video_r.get_json()
+            print(f"{video_json}")
+            # pass_id = {"ID":req_id}
+            # video_json.update(pass_id)
             print(f'Post Response JSON is {video_json}')
             return video_json
-    return flask.jsonify(data['videos'])
+    req = flask.request.json
+    print(f"Couldn't update{req}")
+    return 404
 
 @app.route("/note", methods=["GET", "POST"])
 def notes():
@@ -293,6 +314,11 @@ def manifest():
     return flask.send_from_directory("./build", "manifest.json")
 
 app.register_blueprint(bp)
+
+# Delete a video!!!
+# Video.query.filter(Video.ID == 2).delete()
+# Video.query.filter(Video.ID == 4).delete()
+# db.session.commit()
 
 if __name__ == "__main__":
     app.run(

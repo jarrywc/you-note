@@ -10,9 +10,10 @@ export const withEditableResource = (Component, resourcePath, resourceName) => {
         const [originalData, setOriginalData] = useState(null);
         const [data, setData] = useState(null);
 
+
         useEffect(() => {
             (async () => {
-                const response = await axios.get(resourcePath, data);
+                const response = await axios.get(resourcePath);
                 setOriginalData(response.data);
                 setData(response.data);
             })();

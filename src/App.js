@@ -7,7 +7,7 @@ import axios from 'axios';
 //     Outlet,
 // } from 'react-router-dom';
 // import {ListSource} from "./components/archived/ListSource";
-import {VideoInfo} from "./components/VideoInfo";
+// import {VideoInfo} from "./components/VideoInfo";
 // import {VideoInfoForm} from "./components/VideoForm";
 // import {Video} from "./components/upcoming/Video";
 // import {NoteForm} from "./components/NoteForm";
@@ -16,6 +16,7 @@ import {VideoInfo} from "./components/VideoInfo";
 import {List} from "./components/List";
 // import {VideoNote} from "./components/VideoNote";
 import {useState} from "react";
+import {VideoTest} from  "./components/VideoTest"
 
 const getServerData = url => async () => {
   const response = await axios.get(url);
@@ -46,13 +47,17 @@ function App() {
   return (
     <div className="App">
         <div>
-
-
             <List getList={getServerData('/get_videos')}
                   resourceName='video'
-                  itemComponent={VideoInfo}
+                  itemComponent={VideoTest}
                   selectItem={setThisVideo}
             />
+
+            {/*<List getList={getServerData('/get_videos')}*/}
+            {/*      resourceName='video'*/}
+            {/*      itemComponent={VideoInfo}*/}
+            {/*      selectItem={setThisVideo}*/}
+            {/*/>*/}
         </div>
 
 
