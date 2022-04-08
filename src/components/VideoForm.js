@@ -3,7 +3,7 @@ import Iframe from "react-iframe";
 import React from "react";
 
 export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo }) => {
-    const {  ID, user_id, ext_video_id, title  } = video || {};
+    const {  ID, user_id, ext_source, title  } = video || {};
 
     return video ? (
         <>

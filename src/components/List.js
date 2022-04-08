@@ -7,16 +7,13 @@ export const List = ({
         resourceName,
         itemComponent: ItemComponent,
     }) => {
-
     const [list, setList] = useState([]);
-    const [listActive, setListActive] = useState(false);
-
+    const [listActive, setListActive] = useState(true);
     const toggleListActive = () => {
         console.log("App Video List changed from "+listActive);
         setListActive(!listActive);
         console.log(" to "+listActive);
     }
-
     useEffect(() => {
         ( async () => {
             const l = await getList();
@@ -24,16 +21,19 @@ export const List = ({
             console.log("ListSource || Using Effect, we obtained:");
             console.log(l);
         })();
+    // eslint-disable-next-line
     }, []);
     console.log('ListSource || List Loaded as:');
     console.log(list);
-
     return (
         <>
-            <Link to="/videos" onClick={toggleListActive}>Change State</Link>
-            {list.map((item, i) => (
-                <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
-            ))}
+            <Link onClick={toggleListActive}>{ listActive ? 'Hide List': 'Show List'}</Link>
+            {
+                // listActive &&
+                list.map((item, i) => (
+                    <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
+                ))
+            }
             <Outlet />
         </>
     )

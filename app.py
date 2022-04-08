@@ -172,7 +172,7 @@ def users():
     '''
     return flask.jsonify(data['users'])
 
-@app.route("/get_videos", methods=["GET", "POST"])
+@app.route("/videos", methods=["GET", "POST"])
 def get_videos():
     '''
     Returns all videos in DB for the user logged in

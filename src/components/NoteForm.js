@@ -1,7 +1,7 @@
 import { withEditableResource } from "./withEditableResource";
 
 export const NoteForm = withEditableResource(({ note, onChangeNote, onSaveNote, onResetNote }) => {
-    const {  ID, video_id, location_index, content  } = note || {};
+    const {  ID, video_id, sort_id, content  } = note || {};
 
     return note ? (
         <>
