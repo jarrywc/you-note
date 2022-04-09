@@ -107,7 +107,7 @@ db.create_all()
 
 
 # set up a separate route to serve the react index.html file generated
-@bp.route("/index")
+@bp.route("/main")
 @login_required
 def index():
     return flask.render_template("index.html")
