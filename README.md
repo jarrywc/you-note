@@ -1,6 +1,6 @@
 https://u-note.herokuapp.com/
 
-Note: You need to login with these credentials to see some features because we haven't created the ability for new users to add videos yet.)
+Note: You need to login with these credentials to see some features because we haven't created the ability for new users to add videos yet.
 
 <ins>Test Login</ins> 
 email - test@mail.com
