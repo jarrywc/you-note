@@ -1,4 +1,12 @@
 https://u-note.herokuapp.com/
+
+Note: You need to login with these credentials to see some features because we haven't created the ability for new users to add videos yet.
+
+<ins>Test Login</ins> 
+email - test@mail.com
+password - test
+
+
 # YouNote
 * A note-taking app that allows you to take detailed notes that are in sync with a YouTube tutorial of your choice.
 
