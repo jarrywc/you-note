@@ -8,7 +8,7 @@ import axios from 'axios';
 // } from 'react-router-dom';
 // import {ListSource} from "./components/archived/ListSource";
 // import {VideoInfo} from "./components/VideoInfo";
-// import {VideoInfoForm} from "./components/VideoForm";
+// import {VideoForm} from "./components/VideoForm";
 // import {Video} from "./components/upcoming/Video";
 // import {NoteForm} from "./components/NoteForm";
 // import {NoteInfo} from "./components/NoteInfo";
@@ -38,11 +38,12 @@ function App() {
   const [video, setVideo] = useState({});
 
   const setThisVideo = (v) => {
-      console.log('App Received: '+v);
+      console.log('App Received: '+{v});
       setVideo(v);
       console.log('App Video Set To: '+video);
   }
 
+    
 
   return (
     <div className="App">
@@ -55,7 +56,7 @@ function App() {
 
             {/*<List getList={getServerData('/get_videos')}*/}
             {/*      resourceName='video'*/}
-            {/*      itemComponent={VideoInfo}*/}
+            {/*      itemComponent={VideoForm}*/}
             {/*      selectItem={setThisVideo}*/}
             {/*/>*/}
         </div>

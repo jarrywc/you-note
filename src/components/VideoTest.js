@@ -1,34 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React, {useReducer, useState} from 'react';
 // import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
-import {NoteInfo} from "./NoteInfo";
-import {List} from "./List";
+// import {NoteInfo} from "./NoteInfo";
+// import {List} from "./List";
 import axios from "axios";
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const VideoTest = ( { video, select } ) => {
-    const { ID, ext_video_id, title, notes } = video;
-
+    const videoTemplate = {ID:0, ext_video_id:"", title:""}
+    const { ID } = video || videoTemplate;
+    // These are states that manage how video test looks
     const [originalData, setOriginalData] = useState(video);
-    const [data, setData] = useState({});
-
-
-    useEffect(() => {
-        (async () => {
-            const response = await axios.get('video');
-            setOriginalData(response.data);
-            setData(response.data);
-        })();
-    }, []);
-
+    const [data, setData] = useState(video);
+    const [edit, toggle] = useReducer((edit)=>!edit, false);
     const onChangeVideo = changes => {
         console.log('Changed '+{changes})
-        setData({ ...data, ...changes });
+        setData(prevState => {return{...prevState, changes}});
+        console.log("Changed to "+data)
     }
 
     const onSaveVideo = async () => {
-        console.log('Saved')
-        const response = await axios.post('video', { data });
+        console.log('Saving' + {data} + " -- "+data)
+        const response = await axios.post('video', {ID:ID, data } );
         setOriginalData(response.data);
         setData(response.data);
     }
@@ -38,44 +31,49 @@ export const VideoTest = ( { video, select } ) => {
         setData(originalData);
     }
     console.log("VideoInfo");
-    console.log("id:"+ID)
+    console.log("id:"+data.ID)
     return video ? (
         <>
         <h4><button
             style={{ display: "block", margin: "1rem 0" }}
-            onClick={select(video)}
+            onClick={select(data)}
             key={ID}>
-                {title}
+                {data.title}
         </button></h4>
         <div>
             {ID}
-            {ext_video_id}
+            {data.ext_video_id}
         </div>
 
         <div>
-            <ReactPlayer url={ext_video_id} />
+            <ReactPlayer url={data.ext_video_id} />
         </div>
-            <div>
-                <List getList={()=>notes}
-                      resourceName='note'
-                      itemComponent={NoteInfo}
+            {/*<div>*/}
+            {/*    <List getList={()=>notes}*/}
+            {/*          resourceName='note'*/}
+            {/*          itemComponent={NoteInfo}*/}
 
-                />
-            </div>
+            {/*    />*/}
+            {/*</div>*/}
             <div>
                 <label>
                     Title:
                     <input
                         type="text"
-                        defaultValue={title}
-                        onChange={e => onChangeVideo({ title: e.target.value })} />
+                        readOnly={edit}
+                        defaultValue={data.title}
+                        onChange={e => {
+                            setData(prevState => {return{...prevState, title: e.target.value }})
+                        }} />
                 </label>
                 <label>
                     External Source/Url:
                     <input type="text"
-                           defaultValue={ext_video_id}
+                           readOnly={edit}
+                           defaultValue={data.ext_video_id}
                            onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
                 </label>
+                <button onClick={toggle}>{edit?`Edit`:`Lock`}</button>
                 <button onClick={onResetVideo}>Reset</button>
                 <button onClick={onSaveVideo}>Save Changes</button>
             </div>
