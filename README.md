@@ -6,6 +6,7 @@ Note: You need to login with these credentials to see some features because we h
 email - test@mail.com
 password - test
 
+
 # YouNote
 * A note-taking app that allows you to take detailed notes that are in sync with a YouTube tutorial of your choice.
 
