@@ -11,6 +11,24 @@ const getServerData = url => async () => {
   const response = await axios.get(url);
   return response.data;
 }
+//update password
+function updatePassword(e) {
+  var id = e.target.className
+  console.log(e.target.className)
+
+  fetch("/password_reset"), {
+    method: "PUT",
+    body: JSON.stringify({
+      updatePassword: password
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  }
+    .then((response) => response.json())
+
+  alert("Password Updated")
+}
 
 function App() {
 
@@ -42,3 +60,4 @@ function App() {
 }
 
 export default App;
+
