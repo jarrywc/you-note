@@ -14,22 +14,23 @@ const getServerData = url => async () => {
 //update password
 function updatePassword(e) {
   var id = e.target.className
+
   console.log(e.target.className)
 
-  fetch("/password_reset"), {
-    method: "PUT",
+  fetch("/password_reset", {
+    method: "POST",
     body: JSON.stringify({
-      updatePassword: password
+      id: id
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
-  }
+  })
     .then((response) => response.json())
 
   alert("Password Updated")
 }
-
+updatePassword()
 function App() {
 
   //const user_id = "some_user_id";

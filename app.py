@@ -329,6 +329,14 @@ def notes():
     return flask.jsonify(data["notes"])
 
 
+@app.route("/password_reset", methods=["POST"])
+def update_password(id):
+    password = users.query.get(id)
+    updated_pass = flask.request.json["email"]
+
+    db.session.commit()
+
+
 # send manifest.json file
 @app.route("/manifest.json")
 def manifest():
