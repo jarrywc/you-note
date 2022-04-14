@@ -329,12 +329,21 @@ def notes():
     return flask.jsonify(data["notes"])
 
 
-@app.route("/password_reset", methods=["POST"])
-def update_password(id):
-    password = users.query.get(id)
-    updated_pass = flask.request.json["email"]
+@app.route("/update_password", methods=["GET", "POST"])
+def update_password():
 
-    db.session.commit()
+    if flask.request.method == "POST":
+        password = flask.request.form.get("password")
+        new_user = Users(
+            email=email,
+            password=generate_password_hash(password, method="sha256"),
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        # redirect to login page
+        return flask.redirect(flask.url_for("update_password"))
+
+    return flask.render_template("update_password.html")
 
 
 # send manifest.json file
