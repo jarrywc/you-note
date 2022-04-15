@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Note</title>
+</head>
+
+<body>
+    <script>
+        import './App.css';
+        import axios from 'axios';
+
+        // import data from "./d.json"
+        import { List } from "./components/List";
+        // import {VideoNote} from "./components/VideoNote";
+        import { useState } from "react";
+        import { VideoTest } from "./components/VideoTest"
+
+        const getServerData = url => async () => {
+            const response = await axios.get(url);
+            return response.data;
+        }
+
+
+
+        function App() {
+
+            //const user_id = "some_user_id";
+            const [video, setVideo] = useState({});
+
+            const setThisVideo = (v) => {
+                console.log('App Received: ' + v);
+                setVideo(v);
+                console.log('App Video Set To: ' + video);
+            }
+
+
+            return (
+                <div className="App">
+                    <div>
+                        <li>
+                            <List getList={getServerData('/get_videos')}
+                                resourceName='video'
+                                itemComponent={VideoTest}
+                                selectItem={setThisVideo}
+                            />
+                        </li>
+
+                    </div>
+
+
+
+
+                </div>
+            );
+        }
+
+        export default App;
+    </script>
+</body>
+
+</html>
