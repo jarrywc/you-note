@@ -188,10 +188,70 @@ body{
     background-color:#3E78DA;
     transition: 0.3s;
   }
+  .first{
+    position: absolute;
+    width: 146px;
+    height: 31px;
+    left: 98px;
+    top: 214px;
+    
+    background: #F5EEC5;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    }
+    
+    .last{
+      position: absolute;
+      width: 146px;
+      height: 31px;
+      left: 281px;
+      top: 214px;
+      
+      background: #F5EEC5;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      }
+    
+      .email-sign{
+        position: absolute;
+    width: 329px;
+    height: 34px;
+    left: 98px;
+    top: 270px;
+    
+    background: #F5EEC5;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+      }
+    
+      .pass-sign{
+        position: absolute;
+    width: 329px;
+    height: 34px;
+    left: 98px;
+    top: 329px;
+    
+    background: #F5EEC5;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+      }
+    
   
-  
-  
-    b{
-      top: 80%;
+  .password{
+    position: absolute;
+    width: 332px;
+    left: 200px;
+    top: 440px;
+    color:#3E78DA
+    
     }
 
+    b{
+      position: absolute;
+      left: 35px;
+      top: 360px;
+      font-size: small;
+      color: rgb(249, 120, 120);
+    }
+
+    
