@@ -15,18 +15,16 @@
         <a class="home-btn" style="text-decoration:none" href="{{url_for('landing')}}">Home</a>
         <a class="sign-btn" style="text-decoration:none" href="{{url_for('signup')}}">Sign Up</a>
     </div>
-    <br>
-    <br>
-    <br>
+
     <div class="login-div">
-        <!-- <img class="icon" src="/static/younote.png" alt=""> -->
-        <h1 class="login">Login</h1>
-        <!-- Login form -->
-        <form method="POST" action="/login">
-            <input class="login-form" type="text" name="email" placeholder="Email" /><br>
-            <input class="login-form-pass" type="text" name="password" placeholder="Password" /><br>
-            <input class="btn" type="submit" value="Login" />
-        </form>
+    <img class="icon" src="/static/younote.png" alt="">
+    <h1 class="login">Login</h1>
+    <!-- Login form -->
+    <form  method="POST" action="/login">
+        <input class="login-form" type="text" name="email" placeholder = "Email"/><br>
+        <input class="login-form-pass" type="text" name="password" placeholder = "Password"/><br>
+        <input class="btn" type="submit" value="Login"/>
+    </form>
 
         <!-- Get flash messages -->
         {% with messages = get_flashed_messages() %}
@@ -46,3 +44,5 @@
 </body>
 
 </html>
+
+
