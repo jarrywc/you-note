@@ -1,20 +1,20 @@
-import './App.css';
-import axios from 'axios';
 
 import { List } from "./components/List";
 // import {VideoNote} from "./components/VideoNote";
 import { useState } from "react";
 import { VideoTest } from "./components/VideoTest"
 
+import './App.css';
+import axios from 'axios';
 
 const getServerData = url => async () => {
   const response = await axios.get(url);
   return response.data;
 }
 //update password
-function updatePassword(e) {
-
-  // console.log(e.target.className)
+function updatePassword(id) {
+  // const id = pass.target.className
+  // // console.log(e.target.className)
 
   fetch("/update_password", {
     method: "POST",
@@ -30,6 +30,7 @@ function updatePassword(e) {
   alert("Password Updated")
 }
 updatePassword()
+
 function App() {
 
   //const user_id = "some_user_id";
