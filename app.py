@@ -333,16 +333,12 @@ def notes():
 def update_password():
 
     if flask.request.method == "POST":
-        password = flask.request.form.get("password")
-        new_user = Users(
-            email=email,
-            password=generate_password_hash(password, method="sha256"),
-        )
-        db.session.add(new_user)
+        email = flask.request.form.get("email")
+        new_password = flask.request.form.get("password")
+        update_user = Users.query.filter_by(email=email).first()
+        # update_user.password = new_password
         db.session.commit()
-        # redirect to login page
         return flask.redirect(flask.url_for("update_password"))
-
     return flask.render_template("update_password.html")
 
 
