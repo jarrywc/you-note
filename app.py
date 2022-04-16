@@ -5,10 +5,12 @@
 # pylint: disable=W0603
 import email
 from enum import unique
+import requests
 import flask
 import os
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
+import json
 #from flask_oauthlib.client import OAuth, OAuthException
 from flask_login import (
     LoginManager,
@@ -117,6 +119,9 @@ def index():
 # ---------------------------------------------------------------------------
 
 # User loader callback to reload user ID stored in the session
+@bp.route("/videos")
+def display_video():
+    return flask.render_template("index.html")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -307,8 +312,42 @@ def notes():
         print(f'Post Response JSON is {note_json}')
         return note_json
     return flask.jsonify(data['notes'])
+@app.route("/YT")
+def call_yt():
+    query = flask.request.args.get("query")
+    qp = {
+        "part":"snippet",
+        "key":os.getenv("GGL_API"),
+        "q":query,
+        "MaxResults":10,
+        "type":"video"
+    }
+    endpoint ="https://www.googleapis.com/youtube/v3/search"
+    gl_response = requests.get(endpoint, params = qp)
+    response = gl_response.json()
+    print(json.dumps(response, indent=4, sort_keys=True))
+    token =response["nextPageToken"]
+    response = response["items"]
+    video_ids = []
+    for i in range(len(response)):
+        temp = {}
+        temp["token"] = token
+        temp["title"] = response[i]["snippet"]["title"]
+        temp["videoId"] = response[i]["id"]["videoId"]
+        temp["description"]= response[i]["snippet"]["description"]
+        temp["thumbnail"] = response[i]["snippet"]["thumbnails"]["medium"]["url"]
+        video_ids.append(temp)
+
+
+    return flask.jsonify({"results":video_ids})
+
 
 # send manifest.json file
+@app.route("/search")
+def search_yt():
+    query = flask.request.args.get("query")
+    print(query)
+    return flask.render_template("search.html", query =query)
 @app.route("/manifest.json")
 def manifest():
     return flask.send_from_directory("./build", "manifest.json")
@@ -322,5 +361,5 @@ app.register_blueprint(bp)
 
 if __name__ == "__main__":
     app.run(
-        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True
+        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 437)), debug=True
     )
