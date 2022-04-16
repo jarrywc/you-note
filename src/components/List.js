@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useReducer} from "react";
 //import {Link, Outlet} from "react-router-dom";
 
 export const List = ({
@@ -9,8 +9,11 @@ export const List = ({
     }) => {
 
     const [list, setList] = useState([]);
-    const [listActive, setListActive] = useState(false);
-    const [buttonText, setButtonText] = useState("Show List");
+    const [listActive, setListActive] = useState(true);
+    const [buttonText, setButtonText] = useState("Hide List");
+    const [reload, toggle] = useReducer(
+        (reload)=>!reload
+        , true);
     const toggleListActive = () => {
         console.log("App Video List changed from "+listActive);
         setListActive(!listActive);
@@ -19,14 +22,15 @@ export const List = ({
     }
 
     useEffect(() => {
+        if (reload){
         ( async () => {
             const l = await getList();
             setList(l);
             console.log("ListSource || Using Effect, we obtained:");
             console.log(l);
-        })();
+        })();}
     // eslint-disable-next-line
-    }, []);
+    }, [reload]);
     console.log('ListSource || List Loaded as:');
     console.log(list);
 
@@ -34,8 +38,9 @@ export const List = ({
     return (
         <>
             <button onClick={toggleListActive}>{buttonText}</button>
+            <button onClick={toggle}>Reload</button>
             {
-                //listActive &&
+                listActive &&
                 list.map((item, i) => (
                     <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
                 ))

@@ -123,6 +123,11 @@ def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
+
+
 # routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -376,10 +381,103 @@ def video():
 
 
 @app.route("/note", methods=["GET", "POST"])
+def note():
+    '''
+    Note app route is for individual note info editing
+    The function takes the requested add/edit
+    and returns the same data if successful, appending ID if New
+    '''
+    #
+    if flask.request.method == "POST":
+        # Get the request as JSON
+        request=flask.request.json
+        print(f"Inbound Request {request}")
+        # Get the request data
+        request=request["data"]
+        # Get the request id
+        req_id = request["ID"]
+        print(f"Request as JSON --> {request}")
+        # Begin Session
+        db.session.begin()
+        try:
+            # Get the video_id
+            video_id = request["video_id"]
+            # Check DB for Video ID
+            video = Video.query.filter_by(ID=video_id).first()
+            # Video User ID
+            video_user_id = video.user_id
+            # Current Logged in User
+            current_user_id = current_user.ID
+            # Compare with logged in User ID
+            if (current_user.ID != video_user_id):
+                print("Error with User ID")
+                # Stop any DB mutation if the user for this video is wrong
+                return "404 - Invalid User ID"
+        except AttributeError or KeyError:
+            print("Error with Note ID")
+            return "404 - Invalid Key for Note"
+        # Current User
+        print(f"                                current user {current_user.ID}")
+        # Conditional: New or Update
+        if req_id == 0:
+            print(f"   Creating new Note: {req}")
+            #                           Remove the temp ID from req
+            request.pop("ID", None)
+            #                           Unpack JSON to Dict Obj
+            t = Note(**request)
+            print(f"    Table Row Append |_|_| {t}")
+            #                           Add Item to DB
+            db.session.add(t)
+            #                           Commit and grab result
+            commit_result = db.session.commit()
+            print(f"     Commit: {commit_result}")
+            #                           Refresh and retrieve new Table Row
+            db.session.refresh(t)
+            #                           Set Update back
+            updated_table = t
+            #                           Extract Table Row ID
+            req_id = updated_table.ID
+        else:
+            print(f"  Updating values for ID: {req_id}")
+            #                           Unpack Dict Obj
+            t = Video(**request)
+            print(f'         Post Table is {t}')
+            #                               Get the Table Row by it's ID, only THIS user
+            updated_table = Video.query.filter_by(ID=req_id,user_id=current_user.ID).first()
+            print(f"            Old Table: {updated_table}")
+            #                           Set Update back
+            updated_table.ext_video_id = t.ext_video_id
+            updated_table.title = t.title
+            #                           Commit and grab result
+            commit_result = db.session.commit()
+            print(f"     Commit: {commit_result}")
+        #                           Create JSON-able ID
+        response_id = {"ID": req_id}
+        print(f"                ID is {req_id}, in JSON {response_id}")
+        #                           Convert back to Response Obj for response
+        response = flask.jsonify(updated_table)
+        #                           Get to JSON Format
+        response_json = response.get_json()
+        #                           Add ID
+        response_json.update(response_id)
+        print(f" :::Compiled Response ::: {response_json}")
+        #                   Return the whole Row back as JSON
+        return response_json
+    req = flask.request.json
+    print(f"!!! Couldn't update {req}")
+    return "404"
+
+
+@app.route("/note_a", methods=["GET", "POST"])
 def notes():
     '''
     Note app route is for individual note editing
     The function takes the request
+
+    Security Option: Need to add logic to check the Note Parent Key Video
+    against its User against the Current User
+    so unauthorized requests to change notes won't work unless logged in
+    and must have @LoginRequired Param
     '''
     #
     if flask.request.method == "POST":

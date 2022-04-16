@@ -10,26 +10,31 @@ export const VideoTest = ( { video, select } ) => {
     const videoTemplate = {ID:0, ext_video_id:"", title:""}
     const { ID } = video || videoTemplate;
     // These are states that manage how video test looks
-    const [originalData, setOriginalData] = useState(video);
+    // Original data is what is loaded from the DB or a blank template if this is a new video
+    const [originalData, setOriginalData] = useState(video);//||videoTemplate);
+    // Data is the active state of the form field while editing but before saving to DB
     const [data, setData] = useState(video);
+    // Edit is the state of the capability to change the form field contents or leave it as static
     const [edit, toggle] = useReducer((edit)=>!edit, false);
+    // onChangeVideo is the function that writes change to Data (not the DB)
     const onChangeVideo = changes => {
         console.log('Changed '+{changes})
         setData(prevState => {return{...prevState, changes}});
         console.log("Changed to "+data)
     }
-
+    // onSaveVideo is the function that writes the Data to DB, and updates originalData
     const onSaveVideo = async () => {
         console.log('Saving' + {data} + " -- "+data)
         const response = await axios.post('video', {ID:ID, data } );
         setOriginalData(response.data);
         setData(response.data);
     }
-
+    // onResetVideo is the function that reverts form field to the most recently *saved* state
     const onResetVideo = () => {
         console.log('Reset')
         setData(originalData);
     }
+    // Just some logging
     console.log("VideoInfo");
     console.log("id:"+data.ID)
     return video ? (
