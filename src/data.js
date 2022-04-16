@@ -37,7 +37,7 @@ export const data = {
         {
             id: 1,
             email: "test1@nowhere.com",
-            password: "test1"
+            password: "test"
         }
     ]
 }
