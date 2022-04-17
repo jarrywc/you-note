@@ -7,8 +7,8 @@ const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 // PLEASE RE-USE THIS CODE FOR EDITABLE ITEMS
 export const withEditableResource = (Component, resourcePath, resourceName) => {
     return props => {
-        const [originalData, setOriginalData] = useState(null);
-        const [data, setData] = useState(null);
+        const [originalData, setOriginalData] = useState([resourceName]);
+        const [data, setData] = useState([resourceName]);
 
 
         useEffect(() => {
