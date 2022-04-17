@@ -1,37 +1,35 @@
 import './App.css';
 import axios from 'axios';
-// import {
-//     Link,
-//     Route,
-//     Routes,
-//     Outlet,
-// } from 'react-router-dom';
-// import {ListSource} from "./components/archived/ListSource";
-// import {VideoInfo} from "./components/VideoInfo";
-// import {VideoForm} from "./components/VideoForm";
-// import {Video} from "./components/upcoming/Video";
-// import {NoteForm} from "./components/NoteForm";
-// import {NoteInfo} from "./components/NoteInfo";
-// import data from "./d.json"
-import {List} from "./components/List";
+import { List } from "./components/List";
 // import {VideoNote} from "./components/VideoNote";
-import {useState} from "react";
-import {VideoTest} from  "./components/VideoTest"
+import { useState } from "react";
+import { VideoTest } from "./components/VideoTest"
+
 
 const getServerData = url => async () => {
   const response = await axios.get(url);
   return response.data;
 }
+//update password
+function updatePassword(e) {
+  var id = e.target.className
 
-// const getLocalStorageData = key => () => {
-//     // const response = await axios.get('./testData.json');
-//     // console.log("response: "+response.data)
-//     const re = data[key]
-//     console.log('Local Storage found:')
-//     console.log(re)
-//     return re
-//     // return localStorage.getItem(key);
-// }
+  console.log(e.target.className)
+
+  fetch("/password_reset", {
+    method: "POST",
+    body: JSON.stringify({
+      id: id
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((response) => response.json())
+
+  alert("Password Updated")
+}
+updatePassword()
 function App() {
 
   //const user_id = "some_user_id";
@@ -102,9 +100,16 @@ function App() {
         {/*    <NoteInfo />*/}
         {/*</ListSource>*/}
         {/*<NoteForm />*/}
-
+            resourceName='video'
+            itemComponent={VideoTest}
+            selectItem={setThisVideo}
+          />
+        </li>
+      </div>
     </div>
+
   );
 }
 
 export default App;
+
