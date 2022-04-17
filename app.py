@@ -329,9 +329,9 @@ def call_yt():
     token =response["nextPageToken"]
     response = response["items"]
     video_ids = []
+    video_ids.append(token)
     for i in range(len(response)):
         temp = {}
-        temp["token"] = token
         temp["title"] = response[i]["snippet"]["title"]
         temp["videoId"] = response[i]["id"]["videoId"]
         temp["description"]= response[i]["snippet"]["description"]
@@ -341,13 +341,17 @@ def call_yt():
 
     return flask.jsonify({"results":video_ids})
 
+@app.route("/save", methods = ["GET"])
+def save_video():
+    link = flask.request.args.get("link")
+    title = flask.request.args.get("title")
+    user_id = current_user.ID
+    video = Video(user_id= user_id, title = title, ext_video_id = link)
+    db.session.add(video)
+    db.session.commit()
+    return flask.jsonify({"success": 404})
 
 # send manifest.json file
-@app.route("/search")
-def search_yt():
-    query = flask.request.args.get("query")
-    print(query)
-    return flask.render_template("search.html", query =query)
 @app.route("/manifest.json")
 def manifest():
     return flask.send_from_directory("./build", "manifest.json")

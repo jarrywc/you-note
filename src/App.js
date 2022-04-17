@@ -12,9 +12,8 @@ function App() {
   return (
     <div>
       <Menu></Menu>
-      <div id='changeable'>
       <SearchMain/>
-      </div>
+      <div id='changeable'></div>
       <Routes>
           <Route path='/videos' element={<MyVideos/>}/>
           <Route path='/results' element ={<Results/>}/>

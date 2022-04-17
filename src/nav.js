@@ -26,23 +26,50 @@ export function SearchMain(props){
 function Get_yt(){
     let query = document.getElementById("query").value;
     let response;
+    let sources = []
+    var token;
+    var titles = []
     let call = async() =>{
         response = await fetch(`/YT?query=${query}`)
         response  = await response.json()
         const data  = response["results"]
-        console.log(data)
-        const id = data[0]["videoId"]
-        const emb = `https://www.youtube.com/embed/${id}`
-        document.getElementById("changeable").innerHTML = Videos(emb);
+        token = data[0]
+        for (let i = 1; i<data.length; i++){
+        const id = data[i]["videoId"];
+        const emb = `${id}`;
+        titles.push(data[i]["title"])
+        sources.push(emb)
+        }
+        document.getElementById("changeable").innerHTML = `${sources.map((source, index) => Videos(source, titles[index]))}
+        <
+        `
     }
     call()
+    console.log(sources.length)
+    //document.getElementById("changeable").innerHTML = Videos(sources[0])
 
 }
-function Videos (link){
+function Videos (link, title){
     return (
-        <iframe width="560" height="315" src={link}
+        `<div>
+        <h4>${title}</h4>
+        <iframe width="560" height="315" src=https://www.youtube.com/embed/${link}
         title="YouTube video player" frameborder="0" allow="accelerometer; 
         autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen></iframe>
+        <button onclick = ${save(link, title)}>Save this video</button>
+        </div>`
     )
+}
+function save(link, title){
+    const call = async()=>{
+        var response = await fetch(`/save?link=https://www.youtube.com/watch?v=${link}&title=${title}`);
+        response = await response.json();
+        response = response["success"]
+        console.log(response)
+        if (response == 200){
+            alert(`"${title}" has been successfully saved.`)
+        }
+    }
+    call()
 }
