@@ -3,12 +3,15 @@
 # pylint: disable=W1508
 # pylint: disable=R0903
 # pylint: disable=W0603
-# import email
-# from enum import unique
+import email
+from enum import unique
 import flask
 import os
+import flask_login
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
+
+# from flask_oauthlib.client import OAuth, OAuthException
 # from flask_oauthlib.client import OAuth, OAuthException
 from flask_login import (
     LoginManager,
@@ -26,12 +29,18 @@ load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__)
 
-bp = flask.Blueprint("bp", __name__, template_folder="./static/react", )
+bp = flask.Blueprint(
+    "bp",
+    __name__,
+    template_folder="./static/react",
+)
+
 
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+
 
 # If we add Google OAuth
 # app.config['GOOGLE_CLIENT_ID'] = os.getenv("GOOGLE_CLIENT_ID")
@@ -66,11 +75,10 @@ class Users(UserMixin, db.Model):
     videos = db.relationship("Video", backref="Users")
 
     def get_id(self):
-        return (self.ID)
+        return self.ID
 
     def verify_password(self, pwd):
         return check_password_hash(self.password, pwd)
-
 
 @dataclass
 class Video(db.Model):
@@ -118,19 +126,16 @@ def index():
 
 # User loader callback to reload user ID stored in the session
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
-@app.errorhandler(404)
-def not_found(e):
-    return app.send_static_file('index.html')
-
-
 # routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
+
     if flask.request.method == "POST":
         email = flask.request.form.get("email")
         password = flask.request.form.get("password")
@@ -141,7 +146,9 @@ def login():
             return flask.redirect(flask.url_for("bp.index"))
         # else flash wrong email/password and render login page
         else:
-            flask.flash("Incorrect Email and/or Password. Check your login details and try again!")
+            flask.flash(
+                "Incorrect Email and/or Password. Check your login details and try again!"
+            )
             return flask.render_template("login.html")
 
     return flask.render_template("login.html")
@@ -149,13 +156,18 @@ def login():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+
     if flask.request.method == "POST":
         first = flask.request.form.get("first")
         last = flask.request.form.get("last")
         email = flask.request.form.get("email")
         password = flask.request.form.get("password")
-        new_user = Users(first_name=first, last_name=last, email=email,
-                         password=generate_password_hash(password, method="sha256"))
+        new_user = Users(
+            first_name=first,
+            last_name=last,
+            email=email,
+            password=generate_password_hash(password, method="sha256"),
+        )
         db.session.add(new_user)
         db.session.commit()
         # redirect to login page
@@ -166,22 +178,23 @@ def signup():
 
 @app.route("/")
 def landing():
+
     return flask.render_template("landing.html")
 
 
 @app.route("/user", methods=["GET", "POST"])
 def users():
-    '''
+    """
     Allows user to edit username, password, etc
-    '''
-    return flask.jsonify(data['users'])
+    """
+    return flask.jsonify(data["users"])
 
 
 @app.route("/get_videos", methods=["GET", "POST"])
 def get_videos():
-    '''
+    """
     Returns all videos in DB for the user logged in
-    '''
+    """
     print(f"Current User {current_user.ID}")
     video_list = Video.query.with_entities(
         Video.ID,
@@ -235,11 +248,17 @@ def get_notes():
 
 
 
+@app.route("/video", methods=["GET", "POST"])
+def video():
+    """
+
 
 @app.route("/video_a", methods=["GET", "POST"])
 def video_a():
     '''
     Video app route is for individual video info editing
+    The function takes the requested add/edit and returns the same data if successful, appending ID if New
+    """
     The function takes the requested add/edit
     and returns the same data if successful, appending ID if New
     '''
@@ -247,8 +266,7 @@ def video_a():
     if flask.request.method == "POST":
         # Setup a request JSON Obj
         req = flask.request.json
-        # req = request["data"]
-        print(f'Post JSON is {req}')
+        print(f"Post JSON is {req}")
 
         # Start DB Session to send updated (or new) data to DB
         db.session.begin()
@@ -260,12 +278,8 @@ def video_a():
             # Remove the temp ID from req
             req.pop("ID", None)
             # Unpack Dict Obj
-
-
             video = Video(**req)
-
-
-            print(f'        Post Video is {video}')
+            print(f"        Post Video is {video}")
             # Add note to DB
             db.session.add(video)
             # Commit change
@@ -282,7 +296,7 @@ def video_a():
             print(f"{video_json}")
             pass_id = {"ID": video_id}
             video_json.update(pass_id)
-            print(f'Post Response JSON is {video_json}')
+            print(f"Post Response JSON is {video_json}")
             return video_json
         else:
             print(f"  Updating values for ID: {ext_vid_id}")
@@ -380,6 +394,7 @@ def video():
     return "404"
 
 
+
 @app.route("/note", methods=["GET", "POST"])
 def note():
     '''
@@ -470,9 +485,10 @@ def note():
 
 @app.route("/note_a", methods=["GET", "POST"])
 def notes():
-    '''
+    """
     Note app route is for individual note editing
     The function takes the request
+    """
 
     Security Option: Need to add logic to check the Note Parent Key Video
     against its User against the Current User
@@ -483,7 +499,7 @@ def notes():
     if flask.request.method == "POST":
         # Setup a request JSON Obj
         req = flask.request.json
-        print(f'Post JSON is {req}')
+        print(f"Post JSON is {req}")
 
         # Start DB Session to send updated (or new) data to DB
         db.session.begin()
@@ -496,7 +512,7 @@ def notes():
             req.pop("ID", None)
             # Unpack Dict Obj
             note = Note(**req)
-            print(f'        Post Note is {note}')
+            print(f"        Post Note is {note}")
             # Add note to DB
             db.session.add(note)
             # Commit change
@@ -510,7 +526,7 @@ def notes():
             print(f"  Updating values for ID: {req_id}")
             # Unpack Dict Obj
             note = Note(**req)
-            print(f'         Post Note is {note}')
+            print(f"         Post Note is {note}")
             update_note = Note.query.filter_by(ID=req_id).first()
             update_note = note
             # Commit change
@@ -526,9 +542,27 @@ def notes():
             return update_note
         # Convert back to JSON Obj for re
         note_json = flask.jsonify(note)
-        print(f'Post Response JSON is {note_json}')
+        print(f"Post Response JSON is {note_json}")
         return note_json
-    return flask.jsonify(data['notes'])
+    return flask.jsonify(data["notes"])
+
+
+@app.route("/update_password", methods=["GET", "POST"])
+def update_password():
+
+    if flask.request.method == "POST":
+        password = flask.request.form.get("password")
+        new_user = Users(
+            email=email,
+            password=generate_password_hash(password, method="sha256"),
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        # redirect to login page
+        return flask.redirect(flask.url_for("update_password"))
+
+    return flask.render_template("update_password.html")
+
 
 
 # send manifest.json file
@@ -544,7 +578,8 @@ app.register_blueprint(bp)
 # Video.query.filter(Video.ID == 4).delete()
 # db.session.commit()
 
+
 if __name__ == "__main__":
     app.run(
-        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True
+        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8019)), debug=True
     )
