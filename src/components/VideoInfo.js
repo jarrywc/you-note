@@ -1,12 +1,12 @@
 import React from 'react';
 // import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
-import {NoteInfo} from "./NoteInfo";
-import {List} from "./List";
+// import {NoteInfo} from "./NoteInfo";
+// import {List} from "./List";
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const VideoInfo = ( { video, select } ) => {
-    const { ID, ext_video_id, title, notes } = video;
+    const { ID, ext_video_id, title} = video;
 
     console.log("VideoInfo");
     console.log("id:"+ID)
@@ -26,13 +26,13 @@ export const VideoInfo = ( { video, select } ) => {
         <div>
             <ReactPlayer url={ext_video_id} />
         </div>
-            <div>
-                <List getList={()=>notes}
-                      resourceName='note'
-                      itemComponent={NoteInfo}
+            {/*<div>*/}
+            {/*    <List getList={()=>notes}*/}
+            {/*          resourceName='note'*/}
+            {/*          itemComponent={NoteInfo}*/}
 
-                />
-            </div>
+            {/*    />*/}
+            {/*</div>*/}
 
             {/*<div>*/}
             {/*    /!*External Movie Source*!/*/}

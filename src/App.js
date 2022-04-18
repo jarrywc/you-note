@@ -37,10 +37,11 @@ function App() {
   const [video, setVideo] = useState({});
 
   const setThisVideo = (v) => {
-    console.log('App Received: ' + v);
-    setVideo(v);
-    console.log('App Video Set To: ' + video);
+      console.log('App Received: '+{v});
+      setVideo(v);
+      console.log('App Video Set To: '+video);
   }
+
 
 
   return (

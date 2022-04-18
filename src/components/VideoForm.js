@@ -2,10 +2,10 @@ import { withEditableResource } from "./withEditableResource";
 // import Iframe from "react-iframe";
 import React from "react";
 import ReactPlayer from "react-player";
-import {List} from "./List";
-import {NoteInfo} from "./NoteInfo";
+//import {List} from "./List";
+//import {NoteInfo} from "./NoteInfo";
 
-export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo, select }) => {
+export const VideoForm = withEditableResource(({ video, onChangeVideo, onSaveVideo, onResetVideo, select }) => {
     console.log("Video Form Received"+video)
     const {  ID, ext_video_id, title, notes  } = video || {};
     console.log("VideoInfo");
@@ -22,13 +22,13 @@ export const VideoInfoForm = withEditableResource(({ video, onChangeVideo, onSav
                 <div>
                     <ReactPlayer url={ext_video_id} />
                 </div>
-                <div>
-                    <List getList={()=>notes}
-                          resourceName='note'
-                          itemComponent={NoteInfo}
+                {/*<div>*/}
+                {/*    <List getList={()=>notes}*/}
+                {/*          resourceName='note'*/}
+                {/*          itemComponent={NoteInfo}*/}
 
-                    />
-                </div>
+                {/*    />*/}
+                {/*</div>*/}
             </p>
             <p>
                 <label>
