@@ -19,7 +19,6 @@ from flask_login import (
     login_user,
     login_required,
     logout_user,
-    current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from dataclasses import dataclass
@@ -117,6 +116,7 @@ db.create_all()
 @bp.route("/main")
 @login_required
 def index():
+    print(f"User Into React: {flask_login.current_user.ID}")
     return flask.render_template("index.html")
 
 
@@ -135,7 +135,6 @@ def load_user(user_id):
 # routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
-
     if flask.request.method == "POST":
         email = flask.request.form.get("email")
         password = flask.request.form.get("password")
@@ -143,6 +142,7 @@ def login():
         # If user is in the database login user and redirect to dashboard.
         if user and user.verify_password(password):
             login_user(user)
+            print(f"Logged in User: {flask_login.current_user.ID}")
             return flask.redirect(flask.url_for("bp.index"))
         # else flash wrong email/password and render login page
         else:
@@ -195,12 +195,13 @@ def get_videos():
     """
     Returns all videos in DB for the user logged in
     """
-    print(f"Current User {current_user.ID}")
+    user_logged_in = 1 # flask_login.current_user.ID
+    print(f"Current User {user_logged_in}")
     video_list = Video.query.with_entities(
         Video.ID,
         Video.ext_video_id,
         Video.title
-    ).filter_by(user_id=int(current_user.ID)).all()
+    ).filter_by(user_id=int(user_logged_in)).all()
     print(f"Video List:: {video_list}")
     export_list = []
     for vid in video_list:
@@ -214,6 +215,8 @@ def get_videos():
 def get_notes():
     '''
     Returns all videos in DB for the user logged in
+
+    Need to add comparison of user_id for video with current_user for read security
     '''
     req = flask.request.json
     try:
@@ -247,81 +250,6 @@ def get_notes():
     return "404"
 
 
-
-@app.route("/video", methods=["GET", "POST"])
-def video():
-    """
-
-
-@app.route("/video_a", methods=["GET", "POST"])
-def video_a():
-    '''
-    Video app route is for individual video info editing
-    The function takes the requested add/edit and returns the same data if successful, appending ID if New
-    """
-    The function takes the requested add/edit
-    and returns the same data if successful, appending ID if New
-    '''
-    #
-    if flask.request.method == "POST":
-        # Setup a request JSON Obj
-        req = flask.request.json
-        print(f"Post JSON is {req}")
-
-        # Start DB Session to send updated (or new) data to DB
-        db.session.begin()
-        # Check that ID -> if ID is 0, its a NEW NOTE
-        req_id = req["ID"]
-
-        if req_id == 0:
-            print(f"   Creating new video: {req}")
-            # Remove the temp ID from req
-            req.pop("ID", None)
-            # Unpack Dict Obj
-            video = Video(**req)
-            print(f"        Post Video is {video}")
-            # Add note to DB
-            db.session.add(video)
-            # Commit change
-            commit_result = db.session.commit()
-            print(f"            Commit: {commit_result}")
-            # Refresh and retrieve new note
-            db.session.refresh(video)
-            update_video = video
-            video_id = video.ID
-            print(f"            New video ID is {video_id}")
-            # Convert back to Response Obj for response
-            video_r = flask.jsonify(update_video)
-            video_json = video_r.get_json()
-            print(f"{video_json}")
-            pass_id = {"ID": video_id}
-            video_json.update(pass_id)
-            print(f"Post Response JSON is {video_json}")
-            return video_json
-        else:
-            print(f"  Updating values for ID: {ext_vid_id}")
-            # Unpack Dict Obj
-            video = Video(**req)
-            print(f'         Post Video is {video}')
-            update_video = Video.query.filter_by(user_id=current_user.ID).first()
-            update_video = video
-            print(f'         Update Video is {update_video}')
-            # Commit change
-            c = db.session.commit()
-            print(f"            Commit: {c}")
-            # Convert back to Response Obj for response
-            video_r = flask.jsonify(update_video)
-            video_json = video_r.get_json()
-            print(f"Data in Json Format{video_json}")
-            pass_id = {"ID":req_id}
-            video_json.update(pass_id)
-            print(f'Post Response JSON is {video_json}')
-            return video_json
-    req = flask.request.json
-    print(f"Couldn't update{req}")
-    return "404"
-
-
 @app.route("/video", methods=["GET", "POST"])
 def video():
     '''
@@ -330,6 +258,8 @@ def video():
     and returns the same data if successful, appending ID if New
     '''
     #
+    user_logged_in = 1 # flask_login.current_user.ID
+    print(f"User_Id {user_logged_in}")
     if flask.request.method == "POST":
         # Get the request as JSON
         request=flask.request.json
@@ -342,11 +272,17 @@ def video():
         # Begin Session
         db.session.begin()
         # Assign User to requested Row Entry
-        request.update({"user_id":int(current_user.ID)})
-        print(f"                                current user {current_user.ID}")
+        request.update({"user_id":user_logged_in})
+        print(f"                                current user {user_logged_in}")
         # Conditional: New or Update
         if req_id == 0:
-            print(f"   Creating new video: {req}")
+            #       Is External_Video_ID is not blank
+            if request["ext_video_id"] != "":
+            #                           Find out if External_Video_ID already exists
+                if Video.query.filter_by(ext_video_id=request["ext_video_id"]).first() is not None:
+                    print(f"Video doesn't exist")
+                    return "404 - Video Duplicate"
+            print(f"   Creating new video: {request}")
             #                           Remove the temp ID from req
             request.pop("ID", None)
             #                           Unpack JSON to Dict Obj
@@ -364,12 +300,16 @@ def video():
             #                           Extract Table Row ID
             req_id = updated_table.ID
         else:
+            #                           Find out if ID already exists
+            if Video.query.filter_by(ID=req_id, user_id=user_logged_in).first() is None:
+                    print(f"Video doesn't exist")
+                    return "404 - Video Not Here"
             print(f"  Updating values for ID: {req_id}")
             #                           Unpack Dict Obj
             t = Video(**request)
             print(f'         Post Table is {t}')
             #                               Get the Table Row by it's ID, only THIS user
-            updated_table = Video.query.filter_by(ID=req_id,user_id=current_user.ID).first()
+            updated_table = Video.query.filter_by(ID=req_id,user_id=user_logged_in).first()
             print(f"            Old Table: {updated_table}")
             #                           Set Update back
             updated_table.ext_video_id = t.ext_video_id
@@ -402,7 +342,8 @@ def note():
     The function takes the requested add/edit
     and returns the same data if successful, appending ID if New
     '''
-    #
+    # Current Logged in User
+    current_user_id = current_user.ID
     if flask.request.method == "POST":
         # Get the request as JSON
         request=flask.request.json
@@ -421,10 +362,9 @@ def note():
             video = Video.query.filter_by(ID=video_id).first()
             # Video User ID
             video_user_id = video.user_id
-            # Current Logged in User
-            current_user_id = current_user.ID
+
             # Compare with logged in User ID
-            if (current_user.ID != video_user_id):
+            if (current_user_id != video_user_id):
                 print("Error with User ID")
                 # Stop any DB mutation if the user for this video is wrong
                 return "404 - Invalid User ID"
@@ -432,10 +372,10 @@ def note():
             print("Error with Note ID")
             return "404 - Invalid Key for Note"
         # Current User
-        print(f"                                current user {current_user.ID}")
+        print(f"                                current user {current_user_id}")
         # Conditional: New or Update
         if req_id == 0:
-            print(f"   Creating new Note: {req}")
+            print(f"   Creating new Note: {request}")
             #                           Remove the temp ID from req
             request.pop("ID", None)
             #                           Unpack JSON to Dict Obj
@@ -458,7 +398,7 @@ def note():
             t = Video(**request)
             print(f'         Post Table is {t}')
             #                               Get the Table Row by it's ID, only THIS user
-            updated_table = Video.query.filter_by(ID=req_id,user_id=current_user.ID).first()
+            updated_table = Video.query.filter_by(ID=req_id,user_id=current_user_id).first()
             print(f"            Old Table: {updated_table}")
             #                           Set Update back
             updated_table.ext_video_id = t.ext_video_id
@@ -482,71 +422,6 @@ def note():
     print(f"!!! Couldn't update {req}")
     return "404"
 
-
-@app.route("/note_a", methods=["GET", "POST"])
-def notes():
-    """
-    Note app route is for individual note editing
-    The function takes the request
-    """
-
-    Security Option: Need to add logic to check the Note Parent Key Video
-    against its User against the Current User
-    so unauthorized requests to change notes won't work unless logged in
-    and must have @LoginRequired Param
-    '''
-    #
-    if flask.request.method == "POST":
-        # Setup a request JSON Obj
-        req = flask.request.json
-        print(f"Post JSON is {req}")
-
-        # Start DB Session to send updated (or new) data to DB
-        db.session.begin()
-        # Check that ID -> if ID is 0, its a NEW NOTE
-        req_id = req["ID"]
-        # NEW ? EDIT
-        if req_id == 0:
-            print(f"   Creating new note: {req}")
-            # Remove the temp ID from req
-            req.pop("ID", None)
-            # Unpack Dict Obj
-            note = Note(**req)
-            print(f"        Post Note is {note}")
-            # Add note to DB
-            db.session.add(note)
-            # Commit change
-            c = db.session.commit()
-            print(f"            Commit: {c}")
-            # Refresh and retrieve new note
-            db.session.refresh(note)
-            note_id = note.ID
-            print(f"            New note ID is {note_id}")
-        else:
-            print(f"  Updating values for ID: {req_id}")
-            # Unpack Dict Obj
-            note = Note(**req)
-            print(f"         Post Note is {note}")
-            update_note = Note.query.filter_by(ID=req_id).first()
-            update_note = note
-            # Commit change
-            c = db.session.commit()
-            print(f"            Commit: {c}")
-            # Convert back to Response Obj for response
-            note_r = flask.jsonify(update_note)
-            note_json = note_r.get_json()
-            print(f"Data in Json Format{note_json}")
-            pass_id = {"ID": req_id}
-            note_json.update(pass_id)
-
-            return update_note
-        # Convert back to JSON Obj for re
-        note_json = flask.jsonify(note)
-        print(f"Post Response JSON is {note_json}")
-        return note_json
-    return flask.jsonify(data["notes"])
-
-
 @app.route("/update_password", methods=["GET", "POST"])
 def update_password():
 
@@ -562,7 +437,6 @@ def update_password():
         return flask.redirect(flask.url_for("update_password"))
 
     return flask.render_template("update_password.html")
-
 
 
 # send manifest.json file
@@ -581,5 +455,5 @@ app.register_blueprint(bp)
 
 if __name__ == "__main__":
     app.run(
-        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8019)), debug=True
+        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True
     )
