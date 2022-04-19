@@ -11,6 +11,7 @@
     "react-dom": "^17.0.2",
     "react-iframe": "^1.8.0",
     "react-player": "^2.10.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
@@ -20,7 +21,6 @@
     "build": "BUILD_PATH='./static/react' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-
   },
   "eslintConfig": {
     "extends": [

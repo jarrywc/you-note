@@ -3,7 +3,6 @@ import {useEffect, useState, useReducer} from "react";
 
 export const List = ({
         getList = ()=> {},
-        selectItem = () => {},
         resourceName,
         itemComponent: ItemComponent,
     }) => {
@@ -11,8 +10,8 @@ export const List = ({
     const [list, setList] = useState([]);
     const [listActive, setListActive] = useState(true);
     const [buttonText, setButtonText] = useState("Hide List");
-    const [reload, toggle] = useReducer(
-        (reload)=>!reload
+    const [load, reload] = useReducer(
+        (load)=>!load
         , true);
     const toggleListActive = () => {
         console.log("App Video List changed from "+listActive);
@@ -22,7 +21,7 @@ export const List = ({
     }
 
     useEffect(() => {
-        if (reload){
+        if (load){
         ( async () => {
             const l = await getList();
             setList(l);
@@ -30,7 +29,7 @@ export const List = ({
             console.log(l);
         })();}
     // eslint-disable-next-line
-    }, [reload]);
+    }, [load]);
     console.log('ListSource || List Loaded as:');
     console.log(list);
 
@@ -38,11 +37,11 @@ export const List = ({
     return (
         <>
             <button onClick={toggleListActive}>{buttonText}</button>
-            <button onClick={toggle}>Reload</button>
+            <button onClick={reload}>Reload</button>
             {
                 listActive &&
                 list.map((item, i) => (
-                    <ItemComponent sort={i} select={selectItem} {...{ [resourceName]: item }} />
+                    <ItemComponent sort={i}{...{ [resourceName]: item }} />
                 ))
             }
             {/*<Outlet />*/}

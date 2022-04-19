@@ -1,7 +1,10 @@
 import {SplitScreen} from "./style_tools/SplitScreen";
-import {Link, useParams} from "react-router-dom";
-import ReactPlayer from "react-player";
-import React from "react";
+import {useParams} from "react-router-dom";
+// import axios from "axios";
+import {VideoTest} from "./VideoTest";
+import React from 'react';
+// import {List} from "./List";
+// import {NoteInfo} from "./NoteInfo";
 
 // Page entry -> props: video id
 
@@ -12,50 +15,48 @@ import React from "react";
 // Get the video's notes
 
 
-const LeftHandComponent = ({ name, video }) => {
-    const { id, user_id, ext_source, title } = video;
+// const getNoteData = ID => async () => {
+//     console.log("Getting notes for ID "+ID)
+//     const response = await axios.get("get_notes",{params: {video_id:ID}});
+//     return response.data;
+// }
 
+
+const LeftHandComponent = ({ID}) => {
     return (
         <>
-        <h1 style={{ backgroundColor: 'green' }}>{name}</h1>
-            <h4><Link
-                style={{ display: "block", margin: "1rem 0" }}
-                to={`/videos/${id}`}
-                key={id}>
-                {title}
-            </Link></h4>
-            <div>
-                {id}
-                {user_id}
-                {ext_source}
-            </div>
-
-            <div>
-                <ReactPlayer url={ext_source} />
-            </div>
+        <VideoTest id={{ID:ID}}/>
         </>
     );
 }
 
-const RightHandComponent = ({ message }) => {
+const RightHandComponent = ({ID}) => {
+
     return (
         <>
-        <p style={{ backgroundColor: 'red' }}>{message}!</p>
+
+        <p style={{ backgroundColor: 'red' }}>Some words! {ID}</p>
+        {/*    <ul>*/}
+        {/*<List getList={getNoteData(ID)}*/}
+        {/*      resourceName='note'*/}
+        {/*      itemComponent={NoteInfo}*/}
+        {/*    // selectItem={setThisVideo}*/}
+        {/*/>*/}
+        {/*    </ul>*/}
 
 
         </>
     );
 }
 // Props includes the video object
-export const VideoNote = ({video}) => {
-
-    let params = useParams();
-
+export const VideoNote = () => {
+    let {ID} = useParams();
+    console.log("---------P"+ ID);
     return (
         <>
         <SplitScreen leftWeight={3} rightWeight={2}>
-            <LeftHandComponent name={params.videoId} video={video} />
-            <RightHandComponent message="Hello" />
+            <LeftHandComponent ID={ID} />
+            <RightHandComponent ID={ID} />
         </SplitScreen>
         </>
     );

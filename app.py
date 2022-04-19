@@ -5,20 +5,22 @@
 # pylint: disable=W0603
 import email
 from enum import unique
+import requests
 import flask
 import os
 import flask_login
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-
-# from flask_oauthlib.client import OAuth, OAuthException
-# from flask_oauthlib.client import OAuth, OAuthException
+import json
+from urllib.parse import quote_plus
+#from flask_oauthlib.client import OAuth, OAuthException
 from flask_login import (
     LoginManager,
     UserMixin,
     login_user,
     login_required,
     logout_user,
+    current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from dataclasses import dataclass
@@ -26,7 +28,7 @@ from data.fakeData import data
 
 load_dotenv(find_dotenv())
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_folder="./static")
 
 bp = flask.Blueprint(
     "bp",
@@ -115,24 +117,43 @@ db.create_all()
 # set up a separate route to serve the react index.html file generated
 @bp.route("/main")
 @login_required
-def index():
+def index(request_path=None):
+    if flask_login.current_user == flask_login.AnonymousUserMixin:
+            return flask.redirect(flask.url_for("landing"))
     print(f"User Into React: {flask_login.current_user.ID}")
-    return flask.render_template("index.html")
+    return flask.render_template("index.html") # , request_path=flask.request.args.get('request_path', ''))
 
+
+@bp.errorhandler(404)
+def not_found(e):
+    return bp.send_static_file('index.html')
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return flask.redirect(flask.url_for("bp.index"))
+
+# @app.errorhandler(404)
+# def handle_404(e):
+#     if flask.request.method == 'GET':
+#         return flask.redirect(f'/?request_path={quote_plus(flask.request.path)}')
+#     return e
 
 # ---------------------------------------------------------------------------
 # LOGIN/REGISTER FUNCTIONS
 # ---------------------------------------------------------------------------
 
 # User loader callback to reload user ID stored in the session
+# @bp.route("/videos")
+# def display_video():
+#     return flask.render_template("index.html")
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
 
-
-# routes for login/sign up/landing pages
+#routes for login/sign up/landing pages
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if flask.request.method == "POST":
@@ -152,6 +173,13 @@ def login():
             return flask.render_template("login.html")
 
     return flask.render_template("login.html")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    flask_login.logout_user()
+    return "Logout Success"
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -175,11 +203,17 @@ def signup():
 
     return flask.render_template("signup.html")
 
+@login_manager.unauthorized_handler
+@app.route("/landing")
+def landing():
+    return flask.render_template("landing.html")
 
 @app.route("/")
-def landing():
-
-    return flask.render_template("landing.html")
+def catch_all():
+    if flask_login.current_user == flask_login.AnonymousUserMixin:
+        return flask.redirect(flask.url_for("landing"))
+    else:
+        return flask.redirect(flask.url_for("bp.index"))
 
 
 @app.route("/user", methods=["GET", "POST"])
@@ -214,11 +248,11 @@ def get_videos():
 @app.route("/get_notes", methods=["GET", "POST"])
 def get_notes():
     '''
-    Returns all videos in DB for the user logged in
+    Returns all notes in DB for the user logged in
 
     Need to add comparison of user_id for video with current_user for read security
     '''
-    req = flask.request.json
+    req = flask.request.args
     try:
         vid_id = req["video_id"]
     except KeyError:
@@ -249,7 +283,7 @@ def get_notes():
         return export_list_json
     return "404"
 
-
+@app.route("/videos/video", methods=["GET", "POST"])
 @app.route("/video", methods=["GET", "POST"])
 def video():
     '''
@@ -260,6 +294,9 @@ def video():
     #
     user_logged_in = 1 # flask_login.current_user.ID
     print(f"User_Id {user_logged_in}")
+
+    # Begin Session
+    db.session.begin()
     if flask.request.method == "POST":
         # Get the request as JSON
         request=flask.request.json
@@ -269,8 +306,6 @@ def video():
         # Get the request id
         req_id = request["ID"]
         print(f"Request as JSON --> {request}")
-        # Begin Session
-        db.session.begin()
         # Assign User to requested Row Entry
         request.update({"user_id":user_logged_in})
         print(f"                                current user {user_logged_in}")
@@ -280,7 +315,7 @@ def video():
             if request["ext_video_id"] != "":
             #                           Find out if External_Video_ID already exists
                 if Video.query.filter_by(ext_video_id=request["ext_video_id"]).first() is not None:
-                    print(f"Video doesn't exist")
+                    print(f"Video duplicate")
                     return "404 - Video Duplicate"
             print(f"   Creating new video: {request}")
             #                           Remove the temp ID from req
@@ -304,13 +339,21 @@ def video():
             if Video.query.filter_by(ID=req_id, user_id=user_logged_in).first() is None:
                     print(f"Video doesn't exist")
                     return "404 - Video Not Here"
+            #                           Look for a delete request
+#             if request["delete"] != KeyError:
+#                 #                       Delete Row
+#                 delete = Video.query.filter_by(ID=req_id).delete()
+#                 print(f"Delete Response {delete}")
+#                 return "200"
+            #                           Start updating values
             print(f"  Updating values for ID: {req_id}")
             #                           Unpack Dict Obj
             t = Video(**request)
             print(f'         Post Table is {t}')
-            #                               Get the Table Row by it's ID, only THIS user
+            #                           Get the Table Row by it's ID, only THIS user
             updated_table = Video.query.filter_by(ID=req_id,user_id=user_logged_in).first()
             print(f"            Old Table: {updated_table}")
+
             #                           Set Update back
             updated_table.ext_video_id = t.ext_video_id
             updated_table.title = t.title
@@ -329,6 +372,31 @@ def video():
         print(f" :::Compiled Response ::: {response_json}")
         #                   Return the whole Row back as JSON
         return response_json
+    if flask.request.method == "GET":
+        req_id = flask.request.args["ID"]
+        if req_id != 0:
+            #                           Find out if ID already exists
+            if Video.query.filter_by(ID=req_id, user_id=user_logged_in).first() is None:
+                    print(f"Video doesn't exist")
+                    return "404 - Video Not Here"
+            #                               Get the Table Row by it's ID, only THIS user
+            updated_table = Video.query.filter_by(ID=req_id,user_id=user_logged_in).first()
+            #                           Create JSON-able ID
+            response_id = {"ID": req_id}
+            print(f"                ID is {req_id}, in JSON {response_id}")
+            #                           Convert back to Response Obj for response
+            response = flask.jsonify(updated_table)
+            #                           Get to JSON Format
+            response_json = response.get_json()
+            #                           Add ID
+            response_json.update(response_id)
+            print(f" :::Compiled Response ::: {response_json}")
+            #                   Return the whole Row back as JSON
+            return response_json
+        else:
+            print(f"Video doesn't exist")
+            return "404 - Video ID Failure"
+
     req = flask.request.json
     print(f"!!! Couldn't update {req}")
     return "404"
@@ -421,6 +489,47 @@ def note():
     req = flask.request.json
     print(f"!!! Couldn't update {req}")
     return "404"
+
+
+@app.route("/YT")
+def call_yt():
+    query = flask.request.args.get("query")
+    qp = {
+        "part":"snippet",
+        "key":os.getenv("GGL_API"),
+        "q":query,
+        "MaxResults":10,
+        "type":"video"
+    }
+    endpoint ="https://www.googleapis.com/youtube/v3/search"
+    gl_response = requests.get(endpoint, params = qp)
+    response = gl_response.json()
+    print(json.dumps(response, indent=4, sort_keys=True))
+    token =response["nextPageToken"]
+    response = response["items"]
+    video_ids = []
+    video_ids.append(token)
+    for i in range(len(response)):
+        temp = {}
+        temp["title"] = response[i]["snippet"]["title"]
+        temp["videoId"] = response[i]["id"]["videoId"]
+        temp["description"]= response[i]["snippet"]["description"]
+        temp["thumbnail"] = response[i]["snippet"]["thumbnails"]["medium"]["url"]
+        video_ids.append(temp)
+
+
+    return flask.jsonify({"results":video_ids})
+
+@app.route("/save", methods = ["GET"])
+def save_video():
+    link = flask.request.args.get("link")
+    title = flask.request.args.get("title")
+    user_id = current_user.ID
+    video = Video(user_id= user_id, title = title, ext_video_id = link)
+    db.session.add(video)
+    db.session.commit()
+    return flask.jsonify({"success": 404})
+
 
 @app.route("/update_password", methods=["GET", "POST"])
 def update_password():
