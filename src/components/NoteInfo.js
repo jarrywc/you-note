@@ -6,12 +6,12 @@ export const NoteInfo = ({note}) => {
 
     return note ? (
         <>
-            <div>
+            <li>
                 {ID}
                 {video_id}
                 {location_index}
                 <p>Content: {content}</p>
-            </div>
+            </li>
 
         </>
     ): <p>Note loading...</p>;

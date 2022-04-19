@@ -224,6 +224,7 @@ def users():
     return flask.jsonify(data["users"])
 
 
+@app.route("/videos/get_videos", methods=["GET", "POST"])
 @app.route("/get_videos", methods=["GET", "POST"])
 def get_videos():
     """
@@ -245,6 +246,7 @@ def get_videos():
     return export_list_json
 
 
+@app.route("/videos/get_notes", methods=["GET", "POST"])
 @app.route("/get_notes", methods=["GET", "POST"])
 def get_notes():
     '''
@@ -259,14 +261,14 @@ def get_notes():
         return "404"
     if flask.request.method == "GET":
         req = flask.request.json
-        vid_id = req["video_id"]
+        vid_id = flask.request.args["video_id"]
         print(f"Video ID:: {vid_id}")
         note_list = Note.query.with_entities(
             Note.ID,
             Note.video_id,
             Note.location_index,
             Note.content
-        ).filter_by(video_id=1).all()
+        ).filter_by(video_id=vid_id).all()
         print(f"Note List:: {note_list}")
         export_list = []
         for note in note_list:
@@ -282,6 +284,7 @@ def get_notes():
         print(f"Video List as JSON:: {export_list_json}")
         return export_list_json
     return "404"
+
 
 @app.route("/videos/video", methods=["GET", "POST"])
 @app.route("/video", methods=["GET", "POST"])
@@ -411,7 +414,7 @@ def note():
     and returns the same data if successful, appending ID if New
     '''
     # Current Logged in User
-    current_user_id = current_user.ID
+    current_user_id = 1 # current_user.ID
     if flask.request.method == "POST":
         # Get the request as JSON
         request=flask.request.json
@@ -461,16 +464,22 @@ def note():
             #                           Extract Table Row ID
             req_id = updated_table.ID
         else:
+            #                           Check DB for ID
+            if Note.query.filter_by(ID=req_id, video_id=video_id).first() is None:
+                print(f"Note doesn't exist")
+                return "404 - Note Not Here"
+
             print(f"  Updating values for ID: {req_id}")
             #                           Unpack Dict Obj
             t = Video(**request)
             print(f'         Post Table is {t}')
             #                               Get the Table Row by it's ID, only THIS user
-            updated_table = Video.query.filter_by(ID=req_id,user_id=current_user_id).first()
+            updated_table = Note.query.filter_by(ID=req_id,user_id=current_user_id).first()
             print(f"            Old Table: {updated_table}")
             #                           Set Update back
-            updated_table.ext_video_id = t.ext_video_id
-            updated_table.title = t.title
+            updated_table.video_id = t.video_id
+            updated_table.content = t.content
+            updated_table.location_index = t.location_index
             #                           Commit and grab result
             commit_result = db.session.commit()
             print(f"     Commit: {commit_result}")
