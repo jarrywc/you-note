@@ -41,7 +41,7 @@ const RightHandComponent = ({ID}) => {
         <List getList={getNoteData(ID)}
               resourceName='note'
               itemComponent={NoteInfo}
-            // selectItem={setThisVideo}
+              includeEditor={true}
         />
             </ul>
 

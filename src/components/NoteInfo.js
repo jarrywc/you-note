@@ -6,11 +6,8 @@ export const NoteInfo = ({note}) => {
 
     return note ? (
         <>
-            <li>
-                {ID}
-                {video_id}
-                {location_index}
-                <p>Content: {content}</p>
+            <li about={"ID: "+ID+" video_id: "+video_id+" location_index "+location_index}>
+                <p>{content}</p>
             </li>
 
         </>

@@ -1,15 +1,14 @@
 import React, {useEffect, useReducer, useState} from 'react';
 // import Iframe from 'react-iframe';
-import ReactPlayer from "react-player";
 // import {NoteInfo} from "./NoteInfo";
 // import {List} from "./List";
-import {Link } from "react-router-dom";
 import axios from "axios";
-import {VideoSize as sizes} from "./style_tools/VideoSize";
-
+// import { Editor } from "react-draft-wysiwyg";
+// import { EditorState, convertFromRaw } from "draft-js";
+// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 // THIS IS HOW THE NOTE WILL BE DISPLAYED
-export const Note = ( { note, id } ) => {
+export const Note = ( { note, id, editor } ) => {
     // Keep states from reload
     const [load, reload] = useReducer(
         (load)=>!load
@@ -17,13 +16,18 @@ export const Note = ( { note, id } ) => {
 
     //let navigate = useNavigate();
     // Template for NEW Blank Videos
-    // const videoTemplate = {ID:0, ext_video_id:"", title:""}
+    const videoTemplate = {ID:0, ext_video_id:"", title:""}
     // ID must stay constant, user cannot modify. The ID is retrieved from video prop or URL params or template
 
     const { ID } = note || id; // || videoTemplate;
 
     const getData = async  () => {
-        if(load){
+        if(editor){
+            console.log("Editor is active with data"+videoTemplate)
+            setOriginalData(videoTemplate);
+            setData(videoTemplate);
+        }
+        else if(load){
             console.log("Getting note for ID "+ID)
             const response =  await axios.get("video", {params: {ID:ID}});
             setOriginalData(response.data)
@@ -37,11 +41,19 @@ export const Note = ( { note, id } ) => {
 
     // These are states that manage how video test looks
     // Original data is what is loaded from the DB or a blank template if this is a new video
-    const [originalData, setOriginalData] = useState(video);//||videoTemplate);
+    const [originalData, setOriginalData] = useState(note);//||videoTemplate);
     // Data is the active state of the form field while editing but before saving to DB
-    const [data, setData] = useState(video);
+    const [data, setData] = useState(note);
     // Edit is the state of the capability to change the form field contents or leave it as static
     const [edit, toggle] = useReducer((edit)=>!edit, false);
+
+    // // Editor experiments
+    // const [editorState, setEditorState] = useState(() =>
+    //     EditorState.createEmpty()
+    // );
+    // useEffect(() => {
+    //     console.log(editorState);
+    // }, [editorState]);
 
     // onChangeVideo is the function that writes change to Data (not the DB)
     const onChange = changes => {
@@ -68,43 +80,32 @@ export const Note = ( { note, id } ) => {
     return data ? (
         <>
 
-        <h4><button
-            style={{ display: "block", margin: "1rem 0" }}
-            onClick={()=>console.log('Clicked Button for '+data.title)}
-            key={ID}>
-                {data.title}
-        </button></h4>
-        <div>
-            {ID}
-            {data.ext_video_id}
-        </div>
-
-        <div>
-            <ReactPlayer url={data.ext_video_id} height={sizes.small.height} width={sizes.small.width} />
-        </div>
             <div>
                 <label>
-                    Title:
                     <input
-                        type="text"
+                        type="textarea"
+                        aria-rowcount={5}
+                        aria-colcount={50}
                         readOnly={edit}
-                        defaultValue={data.title}
+                        defaultValue={data.content}
                         onChange={e => {
-                            setData(prevState => {return{...prevState, title: e.target.value }})
+                            setData(prevState => {return{...prevState, content: e.target.value }})
                         }} />
                 </label>
-                <label>
-                    External Source/Url:
-                    <input type="text"
-                           readOnly={edit}
-                           defaultValue={data.ext_video_id}
-                           onChange={e => onChange({ ext_video_id: e.target.value })} />
-                </label>
+
+                {/*{*/}
+                {/*<div style={{ border: "1px solid black", padding: '2px', minHeight: '400px' }}>*/}
+                {/*    <Editor*/}
+                {/*        editorState={editorState}*/}
+                {/*        onEditorStateChange={setEditorState}*/}
+                {/*            />*/}
+                {/*    </div>*/}
+                {/*    }*/}
+
                 <button onClick={toggle}>{edit?`Edit`:`Lock`}</button>
                 <button onClick={onReset}>Reset</button>
                 <button onClick={reload}>Reload</button>
                 <button onClick={onSave}>Save Changes</button>
-                <Link to={`/videos/${ID}`}>Open Video</Link>
                 {/*<select value={size} onChange={onChangeSize}>*/}
                 {/*    <option value="small">Small</option>*/}
                 {/*    <option value="medium">Medium</option>*/}
@@ -113,5 +114,5 @@ export const Note = ( { note, id } ) => {
             </div>
 
         </>
-    ): <p>Video loading...</p>;
+    ): <p>Loading...</p>;
 }

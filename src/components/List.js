@@ -1,9 +1,12 @@
 import {useEffect, useState, useReducer} from "react";
+import {Note} from "./Note";
 //import {Link, Outlet} from "react-router-dom";
+
 
 export const List = ({
         getList = ()=> {},
         resourceName,
+        includeEditor,
         itemComponent: ItemComponent,
     }) => {
 
@@ -43,6 +46,10 @@ export const List = ({
                 list.map((item, i) => (
                     <ItemComponent sort={i}{...{ [resourceName]: item }} />
                 ))
+            }
+            {
+                includeEditor &&
+                <Note id={0} editor={true}/>
             }
             {/*<Outlet />*/}
         </>
