@@ -1,9 +1,10 @@
-import React, {useReducer, useState, useRef} from 'react';
+import React, {useReducer, useState, useRef, useEffect} from 'react';
 // import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
 // import {NoteInfo} from "./NoteInfo";
 // import {List} from "./List";
 import axios from "axios";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const VideoTest = ( { video, select } ) => {
@@ -15,7 +16,11 @@ export const VideoTest = ( { video, select } ) => {
     const [edit, toggle] = useReducer((edit)=>!edit, false);
     const [seek, setSeek] = useState()
     const player_ref = useRef()
+    const [copied, setCopied] = useState(false);
+    const [time, setTime] = useState();
+    const [newtime, setnewTime] = useState();
 
+    useEffect(() => { console.log(time) }, [time])
     //function to convert seconds -> minutes and vice versa
     function hmsToSeconds(str) {
         var p = str.split(':'),
@@ -38,9 +43,12 @@ export const VideoTest = ( { video, select } ) => {
       return h + ":" + m + ":" + s;
     }
 
-    const handleTime = e => {
-        console.log(secondsToHms(player_ref.current.getCurrentTime()))
-      }
+    
+
+    function handleTime(){
+        setTime(secondsToHms(player_ref.current.getCurrentTime()));
+        
+    }
     
       const handleSeek = e => {
         var convert_seek = hmsToSeconds(seek)
@@ -114,9 +122,13 @@ export const VideoTest = ( { video, select } ) => {
                 <button onClick={toggle}>{edit?`Edit`:`Lock`}</button>
                 <button onClick={onResetVideo}>Reset</button>
                 <button onClick={onSaveVideo}>Save Changes</button>
-                <button onClick={handleTime} >Timestamp</button>
-                <input size="20" placeholder='Time to Jump (h:m:s)' onChange={event => setSeek(event.target.value)} ></input>
+                <CopyToClipboard text={time}>
+  <button onClick ={handleTime}>Copy Timestamp (click twice)</button>
+</CopyToClipboard>
+                <input size="10" placeholder='Time to Jump (h:m:s)' onChange={event => setSeek(event.target.value)} ></input>
                 <button onClick={handleSeek}>Jump</button>
+                
+                
             </div>
 
             {/*<div>*/}
