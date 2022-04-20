@@ -1,11 +1,9 @@
 .navbar22 {
   position: absolute;
 height: 70px;
-left: 0px;
-top: 0px;
 margin: auto;
 background: #F5EEC5;
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .nav-icon22 {
@@ -13,7 +11,6 @@ position: absolute;
 width: 80px;
 height: 70px;
 left: 10px;
-top: 0px;
 
 }
 
@@ -36,7 +33,7 @@ color: #3E78DA;
   top: 10px;
 
   background: #A9BFE1;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
   place-items: center;
   }
 
@@ -48,14 +45,14 @@ height: 40px;
 left: 1300px;
 top: 10px;
 background: #A9BFE1;
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+box-shadow:  4px 4px rgba(0, 0, 0, 0.25);
 place-items: center;
 
 }
 
 .sign-btn22:hover, .home-btn22:hover  {
   background-color:#3E78DA;
-  transition: prop 0.3s;
+  transition: 0.3s;
 }
 .searchBox22 {
   position: absolute;
@@ -71,7 +68,7 @@ place-items: center;
 
 .searchBox22:hover > .searchInput22 {
   width: 240px;
-  padding: 0 6px;
+  padding: 6px;
 }
 
 .searchBox22:hover > .searchButton22 {
@@ -89,7 +86,7 @@ color : #13468d;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: prop 0.4s;
+  transition: 0.4s;
 }
 
 .searchInput22 {
@@ -100,15 +97,15 @@ color : #13468d;
   padding: 0;
   color: white;
   font-size: 16px;
-  transition: prop 0.4s;
+  transition: 0.4s;
   line-height: 40px;
-  width: 0px;
+
 
 }
 
 @media screen and (max-width: 620px) {
 .searchBox22:hover > .searchInput22 {
   width: 150px;
-  padding: 0 6px;
+  padding: 6px;
 }
 }
