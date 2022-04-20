@@ -153,7 +153,7 @@ export const VideoTest = ( { video, id } ) => {
                 <CopyToClipboard text={time}>
                 <button onClick ={handleTime}>Copy Timestamp (click twice)</button>
                 </CopyToClipboard>
-                <input size="10" placeholder='Time to Jump (h:m:s)' onChange={event => setSeek(event.target.value)} ></input>
+                <input size="20" placeholder='Time to Jump (h:m:s)' onChange={event => setSeek(event.target.value)} ></input>
                 <button onClick={handleSeek}>Jump</button>
                 {/*<select value={size} onChange={onChangeSize}>*/}
                 {/*    <option value="small">Small</option>*/}
