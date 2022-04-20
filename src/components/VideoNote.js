@@ -3,10 +3,13 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 import {VideoTest} from "./VideoTest";
 import React, {useEffect, useReducer, useState} from 'react';
-import {NoteList} from "./NoteList";
+//import {NoteList} from "./NoteList";
 import {NoteInfo} from "./NoteInfo";
 import {Note} from "./Note";
-
+import {
+    MDBCard, MDBCardBody, MDBCardTitle, MDBContainer
+} from "mdb-react-ui-kit"
+// import { Button, Modal } from "react-bootstrap";
 // Page entry -> props: video id
 
 // Get a video
@@ -24,7 +27,7 @@ const getNoteData = ID => async () => {
 
 
 
-const RightHandComponent = ({getList = ()=> {}}) => {
+const RightHandComponent = ({videoId, getList = ()=> {}}) => {
     const [list, setList] = useState([]);
     const [listActive, setListActive] = useState(true);
     const [index, increment] = useReducer(
@@ -42,6 +45,7 @@ const RightHandComponent = ({getList = ()=> {}}) => {
     }
 
     const addNote = newNote => {
+        console.log("List length is")
         console.log(" New Note adding "+newNote);
         let {content} = newNote;
         let add = {
@@ -67,24 +71,41 @@ const RightHandComponent = ({getList = ()=> {}}) => {
 
     return (
         <>
-            <button onClick={toggleListActive}>{buttonText}</button>
-            <button onClick={reload}>Reload</button>
-        <p style={{ backgroundColor: 'red' }}>Some words!</p>
-            <ul>
-                {listActive &&
-                    list.map((note) => (
-                        <NoteInfo {...{ ['note']: note }} />
-                    ))}
-            </ul>
-            <Note id={0} editor={true} appendList={addNote}/>
+            <MDBContainer className="pt-3" >
 
+            <button hidden onClick={reload}>Reload</button>
+            <MDBCard>
+                <MDBCardTitle className="p-3 align-content-center text-center h3">Notes</MDBCardTitle>
+                <MDBCardBody style={{
+                    height:"400px",
+                    overflowY: "scroll"}}>
+                    <ul className="list-unstyled">
+                        {listActive &&
+                            list.map((note) => (
+                                <NoteInfo {...{ ['note']: note }} />
+                            ))}
+                    </ul>
+                </MDBCardBody>
+            </MDBCard>
+            <div className="p-1"/>
+            <MDBCard>
+                <Note video_id={videoId} id={0} editor={true} appendList={addNote}/>
+                <span className="p-1 text-center text-muted" >
+                    <small>
+                        <strong><a onClick={toggleListActive} style={{ }}>{buttonText}</a></strong>    Press Enter to Add
+                    </small></span>
+            </MDBCard>
+
+            </MDBContainer>
         </>
     );
 }
 const LeftHandComponent = ({ID}) => {
     return (
         <>
+            <MDBContainer className="p-1 pt-2">
             <VideoTest id={{ID:ID}}/>
+        </MDBContainer>
         </>
     );
 }
@@ -99,7 +120,7 @@ export const VideoNote = () => {
         <>
         <SplitScreen leftWeight={3} rightWeight={2}>
             <LeftHandComponent ID={ID} />
-            <RightHandComponent getList={getNoteData(ID)} />
+            <RightHandComponent videoId={ID} getList={getNoteData(ID)} />
         </SplitScreen>
         </>
     );

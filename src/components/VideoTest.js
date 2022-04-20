@@ -5,31 +5,11 @@ import ReactPlayer from "react-player";
 // import {List} from "./List";
 import {Link } from "react-router-dom";
 import axios from "axios";
-import {VideoSize as sizes} from "./style_tools/VideoSize";
+// import {VideoSize as sizes} from "./style_tools/VideoSize";
+import {
+    MDBCard, MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit"
+// import { Button, Modal } from "react-bootstrap";
 
-// Size the video State, take in initial_size if nothing set then use small
-// const [size, setSize] = useState(sizes.small)
-// // onChangeSize set the size
-// const onChangeSize = new_size => {
-//     console.log("Size changes to "+new_size)
-//     setSize(new_size)
-// }
-// Set load state for usage in VideoNote
-
-
-//  Use this effect to change the sizes of video
-// useEffect(() => {
-//         ( async () => {
-//             const s = await changeSize();
-//             setSize(s)
-//             console.log("Video Size || Using Effect, we obtained:");
-//             console.log(s);
-//         })();
-//     // eslint-disable-next-line
-// }, [size]);
-
-
-// select=()=>{}, getVideo=()=>{}, initial_size, changeSize=()=>{}
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
 export const VideoTest = ( { video, id } ) => {
@@ -87,54 +67,51 @@ export const VideoTest = ( { video, id } ) => {
     // Just some logging
     console.log("VideoInfo");
     console.log("id: "+ID)
-
+    // className="col col-lg-6 p-2 pt-4"
     return data ? (
         <>
-
-        <h4><button
-            style={{ display: "block", margin: "1rem 0" }}
-            onClick={()=>console.log('Clicked Button for '+data.title)}
-            key={ID}>
-                {data.title}
-        </button></h4>
-        <div>
-            {ID}
-            {data.ext_video_id}
-        </div>
-
-        <div>
-            <ReactPlayer url={data.ext_video_id} height={sizes.small.height} width={sizes.small.width} />
-        </div>
-            <div>
-                <label>
-                    Title:
-                    <input
-                        type="text"
-                        readOnly={edit}
-                        defaultValue={data.title}
-                        onChange={e => {
-                            setData(prevState => {return{...prevState, title: e.target.value }})
-                        }} />
-                </label>
-                <label>
+            <div className="pb-2 pt-2">
+            <MDBCard style={{height:"24rem", paddingBottom:"5px"}}>
+                <MDBCardBody >
+                <MDBCardTitle className="align-content-center text-center">
+                    {/*    <button*/}
+                    {/*    style={{ display: "block", margin: "1rem 0" }}*/}
+                    {/*    onClick={()=>console.log('Clicked Button for '+data.title)}*/}
+                    {/*    key={ID}>*/}
+                    {/*        {data.title}*/}
+                    {/*</button>*/}
+                    <Link to={`/videos/${ID}`} style={{textDecoration:"none"}}>{data.title}</Link>
+                </MDBCardTitle>
+                <ReactPlayer url={data.ext_video_id} height="90%" width="100%" />
+                {/*<label>*/}
+                {/*    Title:*/}
+                {/*    <input*/}
+                {/*        type="text"*/}
+                {/*        readOnly={edit}*/}
+                {/*        defaultValue={data.title}*/}
+                {/*        onChange={e => {*/}
+                {/*            setData(prevState => {return{...prevState, title: e.target.value }})*/}
+                {/*        }} />*/}
+                {/*</label>*/}
+                <label hidden >
                     External Source/Url:
                     <input type="text"
                            readOnly={edit}
                            defaultValue={data.ext_video_id}
                            onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
                 </label>
-                <button onClick={toggle}>{edit?`Edit`:`Lock`}</button>
-                <button onClick={onResetVideo}>Reset</button>
-                <button onClick={reload}>Reload</button>
-                <button onClick={onSaveVideo}>Save Changes</button>
-                <Link to={`/videos/${ID}`}>Open Video</Link>
+                <button hidden onClick={toggle}>{edit?`Edit`:`Lock`}</button>
+                <button hidden onClick={onResetVideo}>Reset</button>
+                <button hidden onClick={reload}>Reload</button>
+                <button hidden onClick={onSaveVideo}>Save Changes</button>
                 {/*<select value={size} onChange={onChangeSize}>*/}
                 {/*    <option value="small">Small</option>*/}
                 {/*    <option value="medium">Medium</option>*/}
                 {/*    <option value="large">Large</option>*/}
                 {/*</select>*/}
+                </MDBCardBody>
+            </MDBCard>
             </div>
-
         </>
     ): <p>Video loading...</p>;
 }

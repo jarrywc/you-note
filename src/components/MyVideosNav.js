@@ -4,7 +4,6 @@ export const MyVideosNav = () => {
 
     return (
       <>
-      Some Video-Specific navbar
           <Outlet />
       </>
     );

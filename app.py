@@ -471,10 +471,10 @@ def note():
 
             print(f"  Updating values for ID: {req_id}")
             #                           Unpack Dict Obj
-            t = Video(**request)
+            t = Note(**request)
             print(f'         Post Table is {t}')
             #                               Get the Table Row by it's ID, only THIS user
-            updated_table = Note.query.filter_by(ID=req_id,user_id=current_user_id).first()
+            updated_table = Note.query.filter_by(ID=req_id).first()
             print(f"            Old Table: {updated_table}")
             #                           Set Update back
             updated_table.video_id = t.video_id
@@ -503,6 +503,7 @@ def note():
 @app.route("/YT")
 def call_yt():
     query = flask.request.args.get("query")
+    print(f"Query YT {query}")
     qp = {
         "part":"snippet",
         "key":os.getenv("GGL_API"),
@@ -525,14 +526,15 @@ def call_yt():
         temp["description"]= response[i]["snippet"]["description"]
         temp["thumbnail"] = response[i]["snippet"]["thumbnails"]["medium"]["url"]
         video_ids.append(temp)
-
-
-    return flask.jsonify({"results":video_ids})
+    res = flask.jsonify({"results":video_ids})
+    print(f":::::::::{video_ids}")
+    return res
 
 @app.route("/save", methods = ["GET"])
 def save_video():
     link = flask.request.args.get("link")
     title = flask.request.args.get("title")
+    print(f"Save {title}")
     user_id = current_user.ID
     video = Video(user_id= user_id, title = title, ext_video_id = link)
     db.session.add(video)
