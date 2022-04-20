@@ -179,7 +179,7 @@ def login():
 @login_required
 def logout():
     flask_login.logout_user()
-    return "Logout Success"
+    return 200
 
 
 @app.route("/signup", methods=["GET", "POST"])

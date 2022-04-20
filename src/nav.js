@@ -48,13 +48,13 @@ export function SearchMain(){
         let query = document.getElementById("query").value;
         let response;
         let sources = []
-        var token;
+        //var token;
         var titles = []
         let call = async() =>{
             response = await fetch(`/YT?query=${query}`)
             response  = await response.json()
             const data  = response["results"]
-            token = data[0]
+            //token = data[0]
             for (let i = 1; i<data.length; i++){
                 const id = data[i]["videoId"];
                 const emb = `${id}`;

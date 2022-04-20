@@ -1,13 +1,15 @@
 import './left.css'
-import { BrowserRouter ,Outlet, Route, Link, Routes } from 'react-router-dom'
-import {MyVideos} from './MyVideos'
+import {  Outlet, Link } from 'react-router-dom'
+//import {MyVideos} from './MyVideos'
 import axios from "axios";
 
 const onLogout = async () => {
     console.log('Logout')
     const response = await axios.get('logout' );
-    window.location.pathname = "/landing"
-    window.location.reload()
+    if(response.status === 200){
+        window.location.pathname = "/landing"
+        window.location.reload()
+    }
 }
 
 export function Menu(){

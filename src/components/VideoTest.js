@@ -36,7 +36,8 @@ export const VideoTest = ( { video, id } ) => {
     // const [load, reload] = useReducer(
     //     (load)=>!load
     //     , true);
-    useEffect(getVideoData,[load]);
+    // eslint-disable-next-line
+    useEffect(()=>{getVideoData()},[]);
 
     // These are states that manage how video test looks
     // Original data is what is loaded from the DB or a blank template if this is a new video

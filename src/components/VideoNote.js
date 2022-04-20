@@ -6,17 +6,8 @@ import React, {useEffect, useReducer, useState} from 'react';
 //import {NoteList} from "./NoteList";
 import {NoteInfo} from "./NoteInfo";
 import {Note} from "./Note";
-import {
-    MDBCard, MDBCardBody, MDBCardTitle, MDBContainer
-} from "mdb-react-ui-kit"
+import { MDBCard, MDBCardBody, MDBCardTitle, MDBContainer } from "mdb-react-ui-kit"
 // import { Button, Modal } from "react-bootstrap";
-// Page entry -> props: video id
-
-// Get a video
-
-// Render the video look
-
-// Get the video's notes
 
 
 const getNoteData = ID => async () => {
@@ -25,32 +16,28 @@ const getNoteData = ID => async () => {
     return response.data;
 }
 
-
-
 const RightHandComponent = ({videoId, getList = ()=> {}}) => {
     const [list, setList] = useState([]);
     const [listActive, setListActive] = useState(true);
     const [index, increment] = useReducer(
         (index)=>index+1, list.length+1
     )
-    const [buttonText, setButtonText] = useState("Hide List");
+
     const [load, reload] = useReducer(
         (load)=>!load
         , true);
-    const toggleListActive = () => {
-        console.log("App Video List changed from "+listActive);
-        setListActive(!listActive);
-        console.log(" to "+listActive);
-        setButtonText(listActive?'Hide List':'Show List')
-    }
+    // const toggleListActive = () => {
+    //     console.log("App Video List changed from "+listActive);
+    //     setListActive(!listActive);
+    //     console.log(" to "+listActive);
+    //     setButtonText(listActive?'Hide List':'Show List')
+    // }
 
     const addNote = newNote => {
         console.log("List length is")
         console.log(" New Note adding "+newNote);
         let {content} = newNote;
-        let add = {
-            ID:index, location_index:index, content:content
-        };
+        let add = { ID:index, location_index:index, content:content };
         const addNote = [...list, add];
         setList(addNote);
         increment()
@@ -66,6 +53,7 @@ const RightHandComponent = ({videoId, getList = ()=> {}}) => {
             })();}
         // eslint-disable-next-line
     }, [load]);
+
     console.log('ListSource || List Loaded as:');
     console.log(list);
 
@@ -82,18 +70,15 @@ const RightHandComponent = ({videoId, getList = ()=> {}}) => {
                     <ul className="list-unstyled">
                         {listActive &&
                             list.map((note) => (
-                                <NoteInfo {...{ ['note']: note }} />
+                                <NoteInfo note={note} />
                             ))}
                     </ul>
                 </MDBCardBody>
             </MDBCard>
             <div className="p-1"/>
             <MDBCard>
-                <Note video_id={videoId} id={0} editor={true} appendList={addNote}/>
-                <span className="p-1 text-center text-muted" >
-                    <small>
-                        <strong><a onClick={toggleListActive} style={{ }}>{buttonText}</a></strong>    Press Enter to Add
-                    </small></span>
+                <Note video_id={videoId} id={0} editor={true} appendList={addNote} toggleList={setListActive} listShow={listActive}/>
+
             </MDBCard>
 
             </MDBContainer>
@@ -120,7 +105,7 @@ export const VideoNote = () => {
         <>
         <SplitScreen leftWeight={3} rightWeight={2}>
             <LeftHandComponent ID={ID} />
-            <RightHandComponent videoId={ID} getList={getNoteData(ID)} />
+            <RightHandComponent videoId={ID} getList={getNoteData(ID) } />
         </SplitScreen>
         </>
     );

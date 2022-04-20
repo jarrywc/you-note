@@ -1,9 +1,9 @@
-import { Outlet } from "react-router-dom";
-import {useState} from "react";
-import {VideoTest} from  "./components/VideoTest"
+// import { Outlet } from "react-router-dom";
+// import {useState} from "react";
+// import {VideoTest} from  "./components/VideoTest"
 import './App.css';
 import axios from 'axios';
-import {List} from "./components/List";
+//import {List} from "./components/List";
 const getServerData = url => async () => {
   const response = await axios.get(url);
   return response.data;
