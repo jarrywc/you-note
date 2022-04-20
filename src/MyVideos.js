@@ -5,6 +5,7 @@ import {List} from "./components/List";
 import {
   MDBContainer,
   MDBRow} from "mdb-react-ui-kit"
+import React from 'react';
 // import { Button, Modal } from "react-bootstrap";
 
 const getServerData = url => async () => {

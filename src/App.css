@@ -55,7 +55,7 @@ place-items: center;
 
 .sign-btn22:hover, .home-btn22:hover  {
   background-color:#3E78DA;
-  transition: 0.3s;
+  transition: prop 0.3s;
 }
 .searchBox22 {
   position: absolute;
@@ -89,7 +89,7 @@ color : #13468d;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.4s;
+  transition: prop 0.4s;
 }
 
 .searchInput22 {
@@ -100,7 +100,7 @@ color : #13468d;
   padding: 0;
   color: white;
   font-size: 16px;
-  transition: 0.4s;
+  transition: prop 0.4s;
   line-height: 40px;
   width: 0px;
 

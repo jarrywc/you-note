@@ -43,7 +43,7 @@
     transform: translate(-110%);
     z-index: 998;
     background-color: var(--lightest-green);
-    transition: 1s;
+    transition: prop 1s;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,7 +89,7 @@
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
     background-color: var(--border-color);
-    transition: 500ms;
+    transition: prop 500ms;
     transform-origin: right center;
   }
   [for="ham-menu"] > div > span:nth-child(4),

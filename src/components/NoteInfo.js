@@ -1,19 +1,8 @@
-//import React, {useState} from 'react';
-// import DOMPurify from 'dompurify';
-// import { convertToHTML } from 'draft-convert'
+import React from 'react';
 
 // THIS IS HOW THE NOTE WILL BE DISPLAYED
 export const NoteInfo = ({note}) => {
     const {ID, video_id, location_index, content} = note;// || {};
-    // const [htmlContent, setHtmlContent] = useState("");
-    // let currentContentAsHTML = convertToHTML(content);
-    // setHtmlContent(currentContentAsHTML);
-    //
-    // const createMarkup = (html) => {
-    //     return  {
-    //         __html: DOMPurify.sanitize(html)
-    //     }
-    // }
 
     return note ? (
         <>
@@ -21,7 +10,6 @@ export const NoteInfo = ({note}) => {
                 <p style={{overflowWrap: "break-word",
                     wordWrap: "break-word",
                     hyphens: "auto"}}>{content}</p>
-                {/*<div dangerouslySetInnerHTML={createMarkup(htmlContent)}/>*/}
             </li>
 
         </>
