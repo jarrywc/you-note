@@ -62,7 +62,6 @@ function App() {
               {/*<Route path='new' element={<VideoTest/>}/>*/}
           </Route>
           <Route path='/results' element ={<Results/>}/>
-
       </Routes>
     </div>
   );

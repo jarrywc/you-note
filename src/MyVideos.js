@@ -7,14 +7,12 @@ const getServerData = url => async () => {
   return response.data;
 }
 export function MyVideos() {
+  document.getElementById("changeable").innerHTML = "";
   return (
         <div>
             <List getList={getServerData('/get_videos')}
                   resourceName='video'
-                  itemComponent={VideoTest}
-            />
-
-
+                  itemComponent={VideoTest}/>
     </div>
   );
 }

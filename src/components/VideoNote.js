@@ -28,7 +28,7 @@ const RightHandComponent = ({getList = ()=> {}}) => {
     const [list, setList] = useState([]);
     const [listActive, setListActive] = useState(true);
     const [index, increment] = useReducer(
-        (index)=>index+1, list.length
+        (index)=>index+1, list.length+1
     )
     const [buttonText, setButtonText] = useState("Hide List");
     const [load, reload] = useReducer(
@@ -42,12 +42,14 @@ const RightHandComponent = ({getList = ()=> {}}) => {
     }
 
     const addNote = newNote => {
-        const {ID, video_id, location_index, content} = newNote;
-        const add = {
-            ID: ID, video_id:video_id, location_index:index
+        console.log(" New Note adding "+newNote);
+        let {content} = newNote;
+        let add = {
+            ID:index, location_index:index, content:content
         };
         const addNote = [...list, add];
-        setList(addNote)
+        setList(addNote);
+        increment()
     }
 
     useEffect(() => {
@@ -89,6 +91,8 @@ const LeftHandComponent = ({ID}) => {
 
 // Props includes the video object
 export const VideoNote = () => {
+    // Clears Searches if they are there
+    document.getElementById("changeable").innerHTML = "";
     let {ID} = useParams();
     console.log("---------P"+ ID);
     return (

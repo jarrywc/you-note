@@ -405,7 +405,7 @@ def video():
     return "404"
 
 
-
+@app.route("/videos/note", methods=["GET", "POST"])
 @app.route("/note", methods=["GET", "POST"])
 def note():
     '''
@@ -537,7 +537,7 @@ def save_video():
     video = Video(user_id= user_id, title = title, ext_video_id = link)
     db.session.add(video)
     db.session.commit()
-    return flask.jsonify({"success": 404})
+    return flask.jsonify({"success": 200})
 
 
 @app.route("/update_password", methods=["GET", "POST"])
