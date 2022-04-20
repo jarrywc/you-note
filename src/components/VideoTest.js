@@ -1,10 +1,11 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState, useRef} from 'react';
 // import Iframe from 'react-iframe';
 import ReactPlayer from "react-player";
 // import {NoteInfo} from "./NoteInfo";
 // import {List} from "./List";
 import {Link } from "react-router-dom";
 import axios from "axios";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 // import {VideoSize as sizes} from "./style_tools/VideoSize";
 import {
     MDBCard, MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit"
@@ -46,7 +47,44 @@ export const VideoTest = ( { video, id } ) => {
     const [data, setData] = useState(video);
     // Edit is the state of the capability to change the form field contents or leave it as static
     const [edit, toggle] = useReducer((edit)=>!edit, false);
+    const [seek, setSeek] = useState()
+    const player_ref = useRef()
+    const [time, setTime] = useState();
+    
+    //function to convert seconds -> minutes and vice versa
+    function hmsToSeconds(str) {
+        var p = str.split(':'),
+            s = 0, m = 1;
+    
+        while (p.length > 0) {
+            s += m * parseInt(p.pop(), 10);
+            m *= 60;
+        }
+    
+        return s;
+    }
+    
+    function secondsToHms(d) {
+      d = Number(d);
+      var h = Math.floor(d / 3600);
+      var m = Math.floor(d % 3600 / 60);
+      var s = Math.floor(d % 3600 % 60);
+    
+      return h + ":" + m + ":" + s;
+    }
 
+    
+
+    function handleTime(){
+        setTime(secondsToHms(player_ref.current.getCurrentTime()));
+        
+    }
+    
+      const handleSeek = e => {
+        var convert_seek = hmsToSeconds(seek)
+        player_ref.current.seekTo(convert_seek)
+      } 
+      
     // onChangeVideo is the function that writes change to Data (not the DB)
     const onChangeVideo = changes => {
         console.log('Changed '+{changes})
@@ -83,7 +121,14 @@ export const VideoTest = ( { video, id } ) => {
                     {/*</button>*/}
                     <Link to={`/videos/${ID}`} style={{textDecoration:"none"}}>{data.title}</Link>
                 </MDBCardTitle>
-                <ReactPlayer url={data.ext_video_id} height="90%" width="100%" />
+                
+                <ReactPlayer 
+                ref={player_ref}
+                url={data.ext_video_id} 
+                controls= {true}
+                height="90%" 
+                width="100%" />
+                
                 {/*<label>*/}
                 {/*    Title:*/}
                 {/*    <input*/}
@@ -105,6 +150,11 @@ export const VideoTest = ( { video, id } ) => {
                 <button hidden onClick={onResetVideo}>Reset</button>
                 <button hidden onClick={reload}>Reload</button>
                 <button hidden onClick={onSaveVideo}>Save Changes</button>
+                <CopyToClipboard text={time}>
+                <button onClick ={handleTime}>Copy Timestamp (click twice)</button>
+                </CopyToClipboard>
+                <input size="10" placeholder='Time to Jump (h:m:s)' onChange={event => setSeek(event.target.value)} ></input>
+                <button onClick={handleSeek}>Jump</button>
                 {/*<select value={size} onChange={onChangeSize}>*/}
                 {/*    <option value="small">Small</option>*/}
                 {/*    <option value="medium">Medium</option>*/}
