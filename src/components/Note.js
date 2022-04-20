@@ -8,7 +8,7 @@ import axios from "axios";
 // import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 // THIS IS HOW THE NOTE WILL BE DISPLAYED
-export const Note = ( { note, id, editor } ) => {
+export const Note = ( { note, id, editor, appendList=()=>{} } ) => {
     // Keep states from reload
     const [load, reload] = useReducer(
         (load)=>!load
@@ -68,6 +68,12 @@ export const Note = ( { note, id, editor } ) => {
         setOriginalData(response.data);
         setData(response.data);
     }
+    // append to the a list
+    const append = async() => {
+            const new_note = await appendList(data)
+            console.log("Note || Added to List");
+            console.log(new_note);
+    }
     // onResetVideo is the function that reverts form field to the most recently *saved* state
     const onReset = () => {
         console.log('Reset')
@@ -82,8 +88,7 @@ export const Note = ( { note, id, editor } ) => {
 
             <div>
                 <label>
-                    <input
-                        type="textarea"
+                    <textarea
                         aria-rowcount={5}
                         aria-colcount={50}
                         readOnly={edit}
@@ -102,10 +107,11 @@ export const Note = ( { note, id, editor } ) => {
                 {/*    </div>*/}
                 {/*    }*/}
 
-                <button onClick={toggle}>{edit?`Edit`:`Lock`}</button>
-                <button onClick={onReset}>Reset</button>
-                <button onClick={reload}>Reload</button>
-                <button onClick={onSave}>Save Changes</button>
+                <button hidden onClick={toggle}>{edit?`Edit`:`Lock`}</button>
+                <button hidden onClick={onReset}>Reset</button>
+                <button hidden onClick={reload}>Reload</button>
+                <button hidden onClick={onSave}>Save</button>
+                <button onClick={append}>`->-^`</button>
                 {/*<select value={size} onChange={onChangeSize}>*/}
                 {/*    <option value="small">Small</option>*/}
                 {/*    <option value="medium">Medium</option>*/}
