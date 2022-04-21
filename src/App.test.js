@@ -4,6 +4,6 @@ import App from './App';
 test("Testing App.js", () => {
   const {getByText} = render(<App />);
 
-  const linkElement = getByText(/Show List/);
+  const linkElement = getByText(/Hide List/);
   expect(linkElement).toBeInTheDocument();
 });
