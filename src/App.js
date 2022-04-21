@@ -27,9 +27,9 @@ function App() {
 
   return (
     <div id="flex-container">
-      <div class="videos">
+      <div className="videos">
         <li>
-          <List class="list" getList={getServerData('/get_videos')}
+          <List className="list" getList={getServerData('/get_videos')}
 
             resourceName='video'
             itemComponent={VideoTest}
