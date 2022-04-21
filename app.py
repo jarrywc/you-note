@@ -302,8 +302,9 @@ def video():
     print(f"User_Id {user_logged_in}")
 
     # Begin Session
-    db.session.begin()
+
     if flask.request.method == "POST":
+        db.session.begin()
         # Get the request as JSON
         request=flask.request.json
         print(f"Inbound Request {request}")
@@ -341,6 +342,7 @@ def video():
             #                           Extract Table Row ID
             req_id = updated_table.ID
         else:
+            db.session.begin()
             #                           Find out if ID already exists
             if Video.query.filter_by(ID=req_id, user_id=user_logged_in).first() is None:
                     print(f"Video doesn't exist")
