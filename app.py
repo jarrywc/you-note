@@ -233,7 +233,7 @@ def get_videos():
     """
     Returns all videos in DB for the user logged in
     """
-    user_logged_in = 1 # flask_login.current_user.ID
+    user_logged_in = flask_login.current_user.ID
     print(f"Current User {user_logged_in}")
     video_list = Video.query.with_entities(
         Video.ID,
@@ -298,7 +298,7 @@ def video():
     and returns the same data if successful, appending ID if New
     '''
     #
-    user_logged_in = 1 # flask_login.current_user.ID
+    user_logged_in = flask_login.current_user.ID
     print(f"User_Id {user_logged_in}")
 
     # Begin Session
@@ -417,7 +417,7 @@ def note():
     and returns the same data if successful, appending ID if New
     '''
     # Current Logged in User
-    current_user_id = 1 # current_user.ID
+    current_user_id = current_user.ID
     if flask.request.method == "POST":
         # Get the request as JSON
         request=flask.request.json
