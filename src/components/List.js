@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState, useReducer} from "react";
 import {Note} from "./Note";
 //import {Link, Outlet} from "react-router-dom";
@@ -40,8 +41,12 @@ export const List = ({
 
     return (
         <>
+        
+        <div className="move-demo">
             <button onClick={toggleListActive}>{buttonText}</button>
             <button onClick={reload}>Reload</button>
+        </div>
+        <div className="move-demo2">
             {
                 listActive &&
                 list.map((item, i) => (
@@ -53,6 +58,7 @@ export const List = ({
                 <Note id={0} editor={true}/>
             }
             {/*<Outlet />*/}
+            </div>
         </>
     )
 }

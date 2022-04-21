@@ -21,7 +21,7 @@ height: 100px;
 left: 100px;
 top: -4px;
 color: #3E78DA;
-
+font-size: larger;
 }
 
 .home-btn22 {
@@ -56,11 +56,11 @@ place-items: center;
 }
 .searchBox22 {
   position: absolute;
-  top: 50%;
+  top: 2%;
   left: 50%;
   transform:  translate(-50%,50%);
   background: #b5becc;
-  height: 40px;
+  height: 55px;
   border-radius: 40px;
   padding: 10px;
 
@@ -102,10 +102,27 @@ color : #13468d;
 
 
 }
+.move-demo{
+  position: absolute;
+  top: 15%;
+ 
+}
+
+.move-demo2{
+  position: absolute;
+  top: 20%;
+  width:50%;
+}
 
 @media screen and (max-width: 620px) {
 .searchBox22:hover > .searchInput22 {
   width: 150px;
   padding: 6px;
 }
+}
+
+.style-split{
+  position:absolute;
+  top: 20%;
+  width: 100%;
 }

@@ -125,10 +125,14 @@ export const VideoNote = () => {
 
     return (
         <>
+        <div className="style-split">
         <SplitScreen leftWeight={3} rightWeight={3}>
+            
             <LeftHandComponent ID={ID} setTimeGrandParent={setTimeGG} />
             <RightHandComponent videoId={ID} getList={getNoteData(ID)} timeStamp={time} getTime={getTimeVN} />
+            
         </SplitScreen>
+        </div>
         </>
     );
 }
