@@ -8,12 +8,13 @@ import axios from "axios";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 // import {VideoSize as sizes} from "./style_tools/VideoSize";
 import {
-    MDBCard, MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit"
+    MDBCard, MDBCardBody, MDBCardTitle, MDBBtn, MDBInput, MDBRow, MDBBtnGroup
+} from "mdb-react-ui-kit"
 // import { Button, Modal } from "react-bootstrap";
 
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
-export const VideoTest = ( { video, id } ) => {
+export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
     // Keep states from reload
     const [load, reload] = useReducer(
         (load)=>!load
@@ -77,6 +78,7 @@ export const VideoTest = ( { video, id } ) => {
 
     function handleTime(){
         setTime(secondsToHms(player_ref.current.getCurrentTime()));
+        setTimeParent(secondsToHms(player_ref.current.getCurrentTime()));
         
     }
     
@@ -150,11 +152,15 @@ export const VideoTest = ( { video, id } ) => {
                 <button hidden onClick={onResetVideo}>Reset</button>
                 <button hidden onClick={reload}>Reload</button>
                 <button hidden onClick={onSaveVideo}>Save Changes</button>
-                <CopyToClipboard text={time}>
-                <button onClick ={handleTime}>Copy Timestamp (click twice)</button>
-                </CopyToClipboard>
-                <input size="20" placeholder='Time to Jump (h:m:s)' onChange={event => setSeek(event.target.value)} ></input>
-                <button onClick={handleSeek}>Jump</button>
+                    <MDBRow>
+                        <MDBBtnGroup className="btn-group-sm">
+                            <CopyToClipboard text={time}>
+                                <MDBBtn className="btn-secondary" onClick ={handleTime}>+Timestamp</MDBBtn>
+                            </CopyToClipboard>
+                            <MDBBtn className="btn-light"  onClick={handleSeek}>Jump</MDBBtn>
+                        </MDBBtnGroup>
+                        <MDBInput size="20" placeholder='Time Hop (h:m:s)' defaultValue='Time Hop (h:m:s)' onChange={event => setSeek(event.target.value)} />
+                    </MDBRow>
                 {/*<select value={size} onChange={onChangeSize}>*/}
                 {/*    <option value="small">Small</option>*/}
                 {/*    <option value="medium">Medium</option>*/}

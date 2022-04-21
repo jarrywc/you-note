@@ -103,12 +103,14 @@ class Note(db.Model):
     location_index: int
     video_id: int
     content: str
+    # time_stamp: str
 
     __tablename__: "Note"
     ID = db.Column(db.Integer, primary_key=True)
     location_index = db.Column(db.Integer)
     video_id = db.Column(db.Integer, db.ForeignKey(Video.ID))
     content = db.Column(db.String(500), nullable=False)
+    # time_stamp = db.Column(db.String(100))
 
 
 db.create_all()
@@ -446,6 +448,8 @@ def note():
         print(f"                                current user {current_user_id}")
         # Conditional: New or Update
         if req_id == 0:
+            if request["content"] == "":
+                return "Blank Note"
             print(f"   Creating new Note: {request}")
             #                           Remove the temp ID from req
             request.pop("ID", None)
@@ -515,7 +519,7 @@ def call_yt():
     gl_response = requests.get(endpoint, params = qp)
     response = gl_response.json()
     print(json.dumps(response, indent=4, sort_keys=True))
-    token =response["nextPageToken"]
+    token =response["nextPageToken"] # How to get more results
     response = response["items"]
     video_ids = []
     video_ids.append(token)

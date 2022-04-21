@@ -16,12 +16,18 @@ const getNoteData = ID => async () => {
     return response.data;
 }
 
-const RightHandComponent = ({videoId, getList = ()=> {}}) => {
+const RightHandComponent = ({videoId, getList = ()=> {}, timeStamp, getTime=()=>{}}) => {
     const [list, setList] = useState([]);
     const [listActive, setListActive] = useState(true);
     const [index, increment] = useReducer(
         (index)=>index+1, list.length+1
     )
+    const [time, setTime] = useState("")
+
+    useEffect(()=>{
+        console.log("Lastest TS sent from button in Video"+timeStamp);
+        setTime(timeStamp);
+    }, [timeStamp]);
 
     const [load, reload] = useReducer(
         (load)=>!load
@@ -34,10 +40,12 @@ const RightHandComponent = ({videoId, getList = ()=> {}}) => {
     // }
 
     const addNote = newNote => {
+        let ts = getTime();
+        console.log("TS in Note List Right side is"+ts);
         console.log("List length is")
         console.log(" New Note adding "+newNote);
-        let {content} = newNote;
-        let add = { ID:index, location_index:index, content:content };
+        let {content, ID} = newNote;
+        let add = { ID:ID, location_index:index, content:content };
         const addNote = [...list, add];
         setList(addNote);
         increment()
@@ -54,8 +62,6 @@ const RightHandComponent = ({videoId, getList = ()=> {}}) => {
         // eslint-disable-next-line
     }, [load]);
 
-    console.log('ListSource || List Loaded as:');
-    console.log(list);
 
     return (
         <>
@@ -77,7 +83,12 @@ const RightHandComponent = ({videoId, getList = ()=> {}}) => {
             </MDBCard>
             <div className="p-1"/>
             <MDBCard>
-                <Note video_id={videoId} id={0} editor={true} appendList={addNote} toggleList={setListActive} listShow={listActive}/>
+                <Note video_id={videoId}
+                      id={0} editor={true}
+                      appendList={addNote}
+                      toggleList={setListActive}
+                      listShow={listActive}
+                    currentTime={time}/>
 
             </MDBCard>
 
@@ -85,11 +96,11 @@ const RightHandComponent = ({videoId, getList = ()=> {}}) => {
         </>
     );
 }
-const LeftHandComponent = ({ID}) => {
+const LeftHandComponent = ({ID, setTimeGrandParent}) => {
     return (
         <>
             <MDBContainer className="p-1 pt-2">
-            <VideoTest id={{ID:ID}}/>
+            <VideoTest id={{ID:ID}} setTimeParent={setTimeGrandParent}/>
         </MDBContainer>
         </>
     );
@@ -101,11 +112,22 @@ export const VideoNote = () => {
     document.getElementById("changeable").innerHTML = "";
     let {ID} = useParams();
     console.log("---------P"+ ID);
+    const [time, setTime] = useState("")
+
+    const setTimeGG = (time) => {
+        console.log("Video told told time to GG Video Note"+time);
+        setTime(time);
+    }
+    const getTimeVN = () => {
+        console.log("Time getting sent from VideoNote to Note List: "+time);
+      return time;
+    }
+
     return (
         <>
-        <SplitScreen leftWeight={3} rightWeight={2}>
-            <LeftHandComponent ID={ID} />
-            <RightHandComponent videoId={ID} getList={getNoteData(ID) } />
+        <SplitScreen leftWeight={3} rightWeight={3}>
+            <LeftHandComponent ID={ID} setTimeGrandParent={setTimeGG} />
+            <RightHandComponent videoId={ID} getList={getNoteData(ID)} timeStamp={time} getTime={getTimeVN} />
         </SplitScreen>
         </>
     );

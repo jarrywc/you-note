@@ -6,7 +6,7 @@ export const NoteInfo = ({note}) => {
 
     return note ? (
         <>
-            <li key={location_index.toString()} about={"ID: "+ID+" video_id: "+video_id+" location_index "+location_index}>
+            <li key={ID.toString()} about={"ID: "+ID+" video_id: "+video_id+" location_index "+location_index}>
                 <p style={{overflowWrap: "break-word",
                     wordWrap: "break-word",
                     hyphens: "auto"}}>{content}</p>
