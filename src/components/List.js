@@ -31,8 +31,6 @@ export const List = ({
         })();}
     // eslint-disable-next-line
     }, [reload]);
-    console.log('ListSource || List Loaded as:');
-    console.log(list);
 
 
     return (
