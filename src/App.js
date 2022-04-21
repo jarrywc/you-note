@@ -10,9 +10,11 @@ import {MyVideosNav} from "./components/MyVideosNav";
 import {MDBContainer, MDBRow} from "mdb-react-ui-kit";
 
 
+
 function App() {
 
   return (
+
       <>
         {/*<MDBNavbar>*/}
         {/*  <img className="nav-icon" src="./younote.png" alt=""/>*/}
