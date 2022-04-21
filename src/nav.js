@@ -36,7 +36,6 @@ function Videos (link, title){
 }
 
 export function SearchMain(){
-    const navigate = useNavigate();
     const [SearchValue, setSearchValue] = useState('');
     const updateSearchField = (e) => {
         setSearchValue(e.target.value);
@@ -88,7 +87,6 @@ export function SearchMain(){
         }
         call();
         document.getElementById("changeable").innerHTML = "";
-        navigate("/videos/list/");
     }
 
 
