@@ -8,8 +8,9 @@ import {Results} from './results'
 import {VideoNote} from "./components/VideoNote";
 import {MyVideosNav} from "./components/MyVideosNav";
 import {MDBContainer, MDBRow} from "mdb-react-ui-kit";
-import {AltNav} from "./altNav";
-
+// import {AltNav} from "./altNav";
+import {SearchMain} from "./nav";
+import {Menu} from "./menu";
 
 
 function App() {
@@ -19,9 +20,9 @@ function App() {
       <>
 
         <div>
-            <AltNav />
-        {/*<Menu/>*/}
-        {/*<SearchMain/>*/}
+            {/*<AltNav />*/}
+        <Menu/>
+        <SearchMain/>
             <MDBContainer className="d-lg-flex">
             <MDBRow xs={3} style={{padding:"5px", height:"100%"}}>
                 <div id='changeable'/>
