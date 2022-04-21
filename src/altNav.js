@@ -1,4 +1,4 @@
-// import axios from "axios";
+import axios from "axios";
 import {SearchMain} from "./nav";
 import {Navbar, NavItem} from "react-bootstrap";
 import {Link} from "react-router-dom";
@@ -11,13 +11,13 @@ export const AltNav = () => {
     //     navigate(link, { replace: true });
     // }
 
-    // const onClick = async (e) => {
-    //     console.log('Go to '+e.target.value)
-    //     await axios.get('/'+e.target.value );
-    //     // window.location.pathname = "/landing";
-    //     // window.location.reload();
-    //
-    // }
+    const onClick = async (e) => {
+        console.log('Go to '+e.target.value)
+        await axios.get('/'+e.target.value );
+        // window.location.pathname = "/landing";
+        // window.location.reload();
+
+    }
 
     return (
         <Navbar className="navbar-expand-lg ">
