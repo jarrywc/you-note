@@ -173,22 +173,38 @@ export const VideoTest = ( { video, id, setTimeParent=()=>{}, videoNote } ) => {
             <MDBCard hidden={edit}>
                 <MDBCardBody hidden={edit}>
                     <MDBRow hidden={edit}>
-                        <MDBCol hidden={edit}>
-                            <label hidden={edit} >
-                                External Source/Url:
-                                <input type="text"
-                                       readOnly={edit}
-                                       defaultValue={data.ext_video_id}
-                                       onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
-                            </label>
+                        <MDBCol hidden={edit} className="pt-2">
+
+                            <MDBRow>
+                                <label hidden={edit} >
+                                    Title:
+                                    <input type="text"
+                                           size="25"
+                                           readOnly={edit}
+                                           defaultValue={data.title}
+                                           onChange={e => onChangeVideo({ title: e.target.value })} />
+                                </label>
+                            </MDBRow>
+
+
                         </MDBCol>
-                        <MDBCol hidden={edit}>
+                        <MDBCol hidden={edit} className="pt-2 text-end">
                             <MDBBtnGroup className="btn-group-sm" hidden={edit}>
                                 <MDBBtn hidden={edit} onClick={onResetVideo}>Reset</MDBBtn>
                                 <MDBBtn hidden={edit} onClick={reload}>Reload</MDBBtn>
-                                <MDBBtn hidden={edit} onClick={onSaveVideo}>Save Changes</MDBBtn>
+                                <MDBBtn hidden={edit} onClick={onSaveVideo}>Save</MDBBtn>
                             </MDBBtnGroup>
                         </MDBCol>
+                    </MDBRow>
+                    <MDBRow hidden={edit} className="pt-4">
+                        <label hidden={edit} >
+                            External Source/Url:
+                            <input type="text"
+                                   readOnly={edit}
+                                   size="40"
+                                   defaultValue={data.ext_video_id}
+                                   onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
+                        </label>
                     </MDBRow>
                 </MDBCardBody>
             </MDBCard>

@@ -1,6 +1,7 @@
 
 import React, {useEffect, useState, useReducer} from "react";
 import {Note} from "./Note";
+import {MDBBtn, MDBBtnGroup} from "mdb-react-ui-kit";
 //import {Link, Outlet} from "react-router-dom";
 
 
@@ -43,8 +44,10 @@ export const List = ({
         <>
         
         <div className="move-demo">
-            <button onClick={toggleListActive}>{buttonText}</button>
-            <button onClick={reload}>Reload</button>
+            <MDBBtnGroup className="btn-group-sm">
+            <MDBBtn className="btn-light" onClick={toggleListActive}>{buttonText}</MDBBtn>
+            <MDBBtn className="btn-light" onClick={reload}>Reload</MDBBtn>
+            </MDBBtnGroup>
         </div>
         <div className="move-demo2">
             {
