@@ -1,6 +1,6 @@
 import axios from "axios";
 import {SearchMain} from "./nav";
-import {Navbar,NavItem} from "react-bootstrap";
+import {Navbar, NavItem} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
 export const AltNav = () => {
@@ -30,9 +30,9 @@ export const AltNav = () => {
             {/*<NavItem>*/}
             {/*    <a className="sign-btn" onClick={onClick} defaultValue={'/landing'} style={{textDecoration:"none"}} href="">Home</a>*/}
             {/*</NavItem>*/}
-            <NavItem>
-                <a className="sign-btn" onClick={onClick} defaultValue={'/logout'} style={{textDecoration:"none"}} href="/logout">Logout</a>
-            </NavItem>
+            {/*<NavItem>*/}
+            {/*    <a className="sign-btn" onClick={onClick} defaultValue={'/logout'} style={{textDecoration:"none"}} href="">Logout</a>*/}
+            {/*</NavItem>*/}
 
         </Navbar>
 
