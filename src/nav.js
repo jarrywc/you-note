@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-//import { useNavigate } from "react-router-dom";
-//import ReactPlayer from "react-player";
-//import {VideoSize as sizes} from "./components/style_tools/VideoSize";
 
 export function NavBar(){
     return (
