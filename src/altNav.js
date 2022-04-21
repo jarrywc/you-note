@@ -31,7 +31,7 @@ export const AltNav = () => {
             {/*    <a className="sign-btn" onClick={onClick} defaultValue={'/landing'} style={{textDecoration:"none"}} href="">Home</a>*/}
             {/*</NavItem>*/}
             <NavItem>
-                <a className="sign-btn" onClick={onClick} defaultValue={'/logout'} style={{textDecoration:"none"}} href="">Logout</a>
+                <a className="sign-btn" onClick={onClick} defaultValue={'/logout'} style={{textDecoration:"none"}} href="/logout">Logout</a>
             </NavItem>
 
         </Navbar>
