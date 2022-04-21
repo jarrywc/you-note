@@ -1,6 +1,6 @@
 import axios from "axios";
 import {SearchMain} from "./nav";
-import {Navbar, NavbarBrand, NavItem} from "react-bootstrap";
+import {Navbar,NavItem} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
 export const AltNav = () => {
