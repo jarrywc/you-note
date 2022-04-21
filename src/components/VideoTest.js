@@ -112,7 +112,7 @@ export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
     return data ? (
         <>
             <div className="pb-2 pt-2">
-            <MDBCard style={{height:"24rem", paddingBottom:"5px"}}>
+            <MDBCard style={{height:"30rem", paddingBottom:"5px"}}>
                 <MDBCardBody >
                 <MDBCardTitle className="align-content-center text-center">
                     {/*    <button*/}
@@ -128,7 +128,7 @@ export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
                 ref={player_ref}
                 url={data.ext_video_id} 
                 controls= {true}
-                height="90%" 
+                height="80%"
                 width="100%" />
                 
                 {/*<label>*/}
@@ -152,7 +152,7 @@ export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
                 <button hidden onClick={onResetVideo}>Reset</button>
                 <button hidden onClick={reload}>Reload</button>
                 <button hidden onClick={onSaveVideo}>Save Changes</button>
-                    <MDBRow>
+                    <MDBRow className="pt-2">
                         <MDBBtnGroup className="btn-group-sm">
                             <CopyToClipboard text={time}>
                                 <MDBBtn className="btn-secondary" onClick ={handleTime}>+Timestamp</MDBBtn>
