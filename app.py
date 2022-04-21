@@ -178,10 +178,11 @@ def login():
 
 
 @app.route("/logout")
+@app.route("/videos/logout")
 @login_required
 def logout():
     flask_login.logout_user()
-    return 200
+    return flask.redirect(flask.url_for('landing'))
 
 
 @app.route("/signup", methods=["GET", "POST"])

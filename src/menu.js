@@ -6,11 +6,11 @@ import React from 'react';
 
 const onLogout = async () => {
     console.log('Logout')
-    const response = await axios.get('logout' );
-    if(response.status === 200){
-        window.location.pathname = "/landing"
-        window.location.reload()
-    }
+    await axios.get('/logout' );
+    // window.location.pathname = "/landing";
+    window.location.reload();
+
+
 }
 
 export function Menu(){
