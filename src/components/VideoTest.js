@@ -8,13 +8,13 @@ import axios from "axios";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 // import {VideoSize as sizes} from "./style_tools/VideoSize";
 import {
-    MDBCard, MDBCardBody, MDBCardTitle, MDBBtn, MDBInput, MDBRow, MDBBtnGroup
+    MDBCard, MDBCardBody, MDBCardTitle, MDBBtn, MDBInput, MDBRow, MDBBtnGroup, MDBCol
 } from "mdb-react-ui-kit"
 // import { Button, Modal } from "react-bootstrap";
 
 
 // THIS IS HOW THE VIDEO WILL BE DISPLAYED
-export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
+export const VideoTest = ( { video, id, setTimeParent=()=>{}, videoNote } ) => {
     // Keep states from reload
     const [load, reload] = useReducer(
         (load)=>!load
@@ -47,7 +47,7 @@ export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
     // Data is the active state of the form field while editing but before saving to DB
     const [data, setData] = useState(video);
     // Edit is the state of the capability to change the form field contents or leave it as static
-    const [edit, toggle] = useReducer((edit)=>!edit, false);
+    const [edit, toggle] = useReducer((edit)=>!edit, !videoNote);
     const [seek, setSeek] = useState()
     const player_ref = useRef()
     const [time, setTime] = useState();
@@ -112,17 +112,19 @@ export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
     return data ? (
         <>
             <div className="pb-2 pt-2">
-            <MDBCard style={{height:"30rem", paddingBottom:"5px"}}>
+
+
+                <MDBCard style={{height:"32rem", paddingBottom:"5px"}}>
                 <MDBCardBody >
-                <MDBCardTitle className="align-content-center text-center">
+                <MDBCardTitle className="align-content-center">
                     {/*    <button*/}
                     {/*    style={{ display: "block", margin: "1rem 0" }}*/}
                     {/*    onClick={()=>console.log('Clicked Button for '+data.title)}*/}
                     {/*    key={ID}>*/}
                     {/*        {data.title}*/}
                     {/*</button>*/}
-                    <Link to={`/videos/${ID}`} style={{textDecoration:"none"}}>{data.title}</Link>
-                </MDBCardTitle>
+                            <Link to={`/videos/${ID}`} style={{textDecoration:"none"}}>{data.title}</Link>
+                    </MDBCardTitle>
                 
                 <ReactPlayer 
                 ref={player_ref}
@@ -141,33 +143,65 @@ export const VideoTest = ( { video, id, setTimeParent=()=>{} } ) => {
                 {/*            setData(prevState => {return{...prevState, title: e.target.value }})*/}
                 {/*        }} />*/}
                 {/*</label>*/}
-                <label hidden >
-                    External Source/Url:
-                    <input type="text"
-                           readOnly={edit}
-                           defaultValue={data.ext_video_id}
-                           onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
-                </label>
-                <button hidden onClick={toggle}>{edit?`Edit`:`Lock`}</button>
-                <button hidden onClick={onResetVideo}>Reset</button>
-                <button hidden onClick={reload}>Reload</button>
-                <button hidden onClick={onSaveVideo}>Save Changes</button>
-                    <MDBRow className="pt-2">
-                        <MDBBtnGroup className="btn-group-sm">
-                            <CopyToClipboard text={time}>
-                                <MDBBtn className="btn-secondary" onClick ={handleTime}>+Timestamp</MDBBtn>
-                            </CopyToClipboard>
-                            <MDBBtn className="btn-light"  onClick={handleSeek}>Jump</MDBBtn>
-                        </MDBBtnGroup>
-                        <MDBInput size="20" placeholder='Time Hop (h:m:s)' defaultValue='Time Hop (h:m:s)' onChange={event => setSeek(event.target.value)} />
-                    </MDBRow>
-                {/*<select value={size} onChange={onChangeSize}>*/}
+
+
+
+                    {videoNote &&
+                        <>
+                        <MDBRow className="pt-2">
+                            <MDBBtnGroup className="btn-group-sm">
+                                <CopyToClipboard text={time}>
+                                    <MDBBtn className="btn-secondary" onClick={handleTime}>+Timestamp</MDBBtn>
+                                </CopyToClipboard>
+                                <MDBBtn className="btn-light" onClick={handleSeek}>Jump</MDBBtn>
+                            </MDBBtnGroup>
+                        </MDBRow>
+                        <MDBRow className="pt-2">
+                        <MDBInput size="20" placeholder='Time Hop (h:m:s)' defaultValue='Time Hop (h:m:s)'
+                                  onChange={event => setSeek(event.target.value)}/>
+                        </MDBRow>
+                        </>
+                    }
+
+                    {/*<select value={size} onChange={onChangeSize}>*/}
                 {/*    <option value="small">Small</option>*/}
                 {/*    <option value="medium">Medium</option>*/}
                 {/*    <option value="large">Large</option>*/}
                 {/*</select>*/}
                 </MDBCardBody>
             </MDBCard>
+            <MDBCard hidden={edit}>
+                <MDBCardBody hidden={edit}>
+                    <MDBRow hidden={edit}>
+                        <MDBCol hidden={edit}>
+                            <label hidden={edit} >
+                                External Source/Url:
+                                <input type="text"
+                                       readOnly={edit}
+                                       defaultValue={data.ext_video_id}
+                                       onChange={e => onChangeVideo({ ext_video_id: e.target.value })} />
+                            </label>
+                        </MDBCol>
+                        <MDBCol hidden={edit}>
+                            <MDBBtnGroup className="btn-group-sm" hidden={edit}>
+                                <MDBBtn hidden={edit} onClick={onResetVideo}>Reset</MDBBtn>
+                                <MDBBtn hidden={edit} onClick={reload}>Reload</MDBBtn>
+                                <MDBBtn hidden={edit} onClick={onSaveVideo}>Save Changes</MDBBtn>
+                            </MDBBtnGroup>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBCardBody>
+            </MDBCard>
+                <MDBRow className="align-content-end">
+                    <MDBCol>
+                        <MDBBtn className="btn-light align-content-end" onClick={()=>toggle()}>{edit?<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>:<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+                        </svg>}</MDBBtn>
+                    </MDBCol>
+                </MDBRow>
             </div>
         </>
     ): <p>Video loading...</p>;

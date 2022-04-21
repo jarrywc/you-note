@@ -26,7 +26,7 @@ function Videos (link, title){
                     title="YouTube video player" allow="accelerometer; 
                     autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen></iframe>
-                    <button value=${link} class="btn-demo btn btn-light" about="${title}">New Video Note</button>
+                    <button value=${link} class="btn-demo btn btn-light" about="${title}">${title}</button>
                 </div>
             </div>
         </div>

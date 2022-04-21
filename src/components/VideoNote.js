@@ -100,7 +100,7 @@ const LeftHandComponent = ({ID, setTimeGrandParent}) => {
     return (
         <>
             <MDBContainer className="p-1 pt-2">
-            <VideoTest id={{ID:ID}} setTimeParent={setTimeGrandParent}/>
+            <VideoTest id={{ID:ID}} setTimeParent={setTimeGrandParent} videoNote={true}/>
         </MDBContainer>
         </>
     );
