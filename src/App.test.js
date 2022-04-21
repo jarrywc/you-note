@@ -1,9 +1,9 @@
-import { render} from '@testing-library/react';
+import { render, screen} from '@testing-library/react';
 import App from './App';
 
 test("Testing App.js", () => {
-  const {getByText} = render(<App />);
+  render(<App />);
 
-  const linkElement = getByText(/Hide List/);
+  const linkElement = screen.getByText(/Hide List/);
   expect(linkElement).toBeInTheDocument();
 });
