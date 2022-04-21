@@ -1,11 +1,11 @@
-import React, {useEffect, useState, useReducer} from "react";
+import {useEffect, useState, useReducer} from "react";
 import {Note} from "./Note";
+import {NoteInfo} from "./NoteInfo";
 //import {Link, Outlet} from "react-router-dom";
 
 
-export const List = ({
+export const NoteList = ({
         getList = ()=> {},
-        resourceName,
         includeEditor,
         itemComponent: ItemComponent,
     }) => {
@@ -37,15 +37,13 @@ export const List = ({
     console.log(list);
 
 
-
     return (
         <>
-            <button onClick={toggleListActive}>{buttonText}</button>
-            <button onClick={reload}>Reload</button>
+
             {
                 listActive &&
-                list.map((item, i) => (
-                    <ItemComponent sort={i}{...{ [resourceName]: item }} />
+                list.map((note, i) => (
+                    <NoteInfo key={note.location_index }{...{ ['note']: note }} />
                 ))
             }
             {

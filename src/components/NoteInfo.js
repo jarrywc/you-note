@@ -6,12 +6,11 @@ export const NoteInfo = ({note}) => {
 
     return note ? (
         <>
-            <div>
-                {ID}
-                {video_id}
-                {location_index}
-                <p>Content: {content}</p>
-            </div>
+            <li key={ID.toString()} about={"ID: "+ID+" video_id: "+video_id+" location_index "+location_index}>
+                <p style={{overflowWrap: "break-word",
+                    wordWrap: "break-word",
+                    hyphens: "auto"}}>{content}</p>
+            </li>
 
         </>
     ): <p>Note loading...</p>;
